@@ -1,0 +1,38 @@
+
+
+{{define "3buttonLogic"}}
+		{{if (eq .Status "S")}} {{template "buttonPlayInactive"}} {{else}} 
+			<a href="/activity/update?ActivityName={{.ActivityName}};StartTime={{.StartTime}};Status={{.Status}};NewStatus=S">
+				{{template "buttonPlay"}} 
+			</a>
+		{{end}}
+		{{if (or (eq .Status "P") (eq .Status "C"))}} {{template "buttonPauseInactive"}} {{else}} 
+			<a href="/activity/update?ActivityName={{.ActivityName}};StartTime={{.StartTime}};Status={{.Status}};NewStatus=P">
+				{{template "buttonPause"}} 
+			</a>
+		{{end}}
+		{{if eq .Status "C"}} {{template "buttonStopInactive"}} {{else}} 
+			<a href="/activity/update?ActivityName={{.ActivityName}};StartTime={{.StartTime}};Status={{.Status}};NewStatus=C">
+				{{template "buttonStop"}} 
+			</a>	
+		{{end}}
+{{end}}
+
+{{define "ActivityListAllFields"}}
+<ul>{{range .}}
+	<li>{{.ActivityName}} {{.Status}}
+		{{template "3buttonLogic" .}}
+		&nbsp;{{.StartTime}}
+	</li>
+	{{end}}
+</ul>
+{{end}}
+
+{{define "ActivityListSpecificFields"}}
+<ul>{{range .}}
+	<li>{{.ActivityName}} {{.Status}}
+		{{template "3buttonLogic" .}}
+	</li>
+	{{end}}
+</ul>
+{{end}}

@@ -1,0 +1,17 @@
+<html>
+<head>
+{{template "mdl"}}
+</head>
+<body>
+{{template "headerMenu"}}
+
+Hello {{.UserName}}!!!
+
+
+<p>below are the active activities</p>
+{{template "ActivityListSpecificFields" .Activity}}
+
+{{template "footer"}}
+
+</body>
+</html>

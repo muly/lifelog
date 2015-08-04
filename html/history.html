@@ -1,0 +1,16 @@
+<html>
+<head>
+{{template "mdl"}}
+</head>
+<body>
+{{template "headerMenu"}}
+<p><b>Hello {{.UserName}}!!!</b></p>
+
+<p>Below is your history of activities.</p>
+
+{{template "ActivityListAllFields" .Activity}}
+
+{{template "footer"}}
+
+</body>
+</html>
