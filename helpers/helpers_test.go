@@ -15,4 +15,8 @@ func TestAdd(t *testing.T) {
 	}
 }
 
-
+func TestInsertActivity(t *testing.T) {
+	//appengine.Context
+	//InsertActivity(c appengine.Context, rec ActivityLog)
+	t.Error("Testing InsertActivity().... WIP")
+}

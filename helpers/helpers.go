@@ -39,7 +39,7 @@ const ( //Note: the values of these constants will have impact in the templates 
 	ActivityStatusCompleted = "C"
 )
 
-func GetActivity(c appengine.Context, filters []Filter, orderBy string) []ActivityLog {
+func GetActivity(c appengine.Context, filters []Filter, orderBy string) []ActivityLog { //[TODO: need to return error]
 	parentKey := GetActivityTableKeyByUser(c)
 	recSet := []ActivityLog{}
 
