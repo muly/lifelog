@@ -6,7 +6,7 @@
 {{template "headerMenu"}}
 <p><b>Hello {{.UserName}}!!!</b></p>
 
-<p>Below is your history of activities.</p>
+<p>Below is your history of {{.Cnt}} activities.</p>
 
 {{template "ActivityListAllFields" .Activity}}
 

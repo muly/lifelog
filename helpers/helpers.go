@@ -23,6 +23,7 @@ type ActivityLog struct {
 //[TODO: need to document this section]
 type HomePgData struct {
 	UserName string
+	Cnt      int
 	Activity []ActivityLog
 }
 

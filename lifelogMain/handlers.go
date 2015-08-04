@@ -46,7 +46,7 @@ func handleRoot(w http.ResponseWriter, r *http.Request) {
 	))
 
 	// prepare the final data structure to pass to templates: add the user name to the activities list.
-	a := helpers.HomePgData{user.Current(c).String(), dst}
+	a := helpers.HomePgData{user.Current(c).String(), len(dst), dst}
 
 	// execute the template whilo passing the required data to be rendered.
 	if err := t.Execute(w, a); err != nil {
@@ -70,7 +70,7 @@ func handleHistory(w http.ResponseWriter, r *http.Request) {
 		"html/_header.html",
 	))
 
-	a := helpers.HomePgData{user.Current(c).String(), dst}
+	a := helpers.HomePgData{user.Current(c).String(), len(dst), dst}
 
 	if err := t.Execute(w, a); err != nil {
 		panic(err)
