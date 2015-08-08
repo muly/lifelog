@@ -17,6 +17,7 @@ type ActivityLog struct {
 	TimeStamp    time.Time //[TODO: need to evaluate if this field is required as it always will have the same value as that of StartTime]
 	StartTime    time.Time
 	EndTime      time.Time
+	ElapsedTime  time.Duration
 	Status       string
 }
 
@@ -73,6 +74,7 @@ func InsertActivity(c appengine.Context, rec ActivityLog) (err error) {
 	return
 }
 
+//
 func UpdateActivity(c appengine.Context, ActivityName string, StartTime string, Status string, NewStatus string) (err error) {
 
 	parentKey := GetActivityTableKeyByUser(c)
@@ -133,6 +135,7 @@ func HandleActivityStatusChange(c appengine.Context, key *datastore.Key, currSta
 		// prepare existing record set:
 		currRec.Status = newStatus   //use the new status,
 		currRec.EndTime = time.Now() //set the end time as now, rest of the fields unchanged
+		currRec.ElapsedTime = currRec.EndTime.Sub(currRec.StartTime)
 	} else if currStatus == ActivityStatusPaused && newStatus == ActivityStatusCompleted { // “pause” to “complete”
 		// prepare existing record set:
 		currRec.Status = newStatus //use the new status, rest of the fields unchanged
@@ -148,7 +151,7 @@ func HandleActivityStatusChange(c appengine.Context, key *datastore.Key, currSta
 		return
 	}
 
-	if currStatus == ActivityStatusPaused && newStatus == ActivityStatusStarted { //additional logic for “pause” to “start”:
+	if currStatus == ActivityStatusPaused && newStatus == ActivityStatusStarted { //additional logic for just “pause” to “start”:
 		// prepare existing record set:
 		currRec.Status = ActivityStatusCompleted // also make the existing record status as "completed"
 	}

@@ -69,7 +69,6 @@ func handleHistory(w http.ResponseWriter, r *http.Request) {
 		"html/_footer.html",
 		"html/_header.html",
 	))
-
 	a := helpers.HomePgData{user.Current(c).String(), len(dst), dst}
 
 	if err := t.Execute(w, a); err != nil {

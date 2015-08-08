@@ -22,7 +22,7 @@
 <ul>{{range .}}
 	<li>{{.ActivityName}} {{.Status}}
 		{{template "3buttonLogic" .}}
-		&nbsp;{{.StartTime}}
+		&nbsp;{{if eq .Status "C"}} {{.ElapsedTime}} {{end}}
 	</li>
 	{{end}}
 </ul>
