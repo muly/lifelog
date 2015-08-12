@@ -18,6 +18,87 @@ type ActivityNameOnly struct {
 	ActivityName string
 }
 
+const UsefulMaterialIcons = `
+<html>
+  <head>
+    <!-- Material Design Lite -->
+    <script src="https://storage.googleapis.com/code.getmdl.io/1.0.2/material.min.js"></script>
+    <link rel="stylesheet" href="https://storage.googleapis.com/code.getmdl.io/1.0.2/material.indigo-pink.min.css">
+    <!-- Material Design icon font -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+  </head>
+  <body>
+    <table>
+      <thead>
+        <tr>
+          <th>Icon</th>
+          <th>Label</th>
+        </tr>
+      </thead>
+      <tbody>
+      <!--Groups:::::::::-->
+        <tr>
+          <td><button class="mdl-button mdl-js-button mdl-button--icon mdl-button--colored"> <i class="material-icons">laptop</i> </button></td>
+          <td>work related group</td>
+        </tr>
+        <tr>
+          <td><button class="mdl-button mdl-js-button mdl-button--icon mdl-button--colored"> <i class="material-icons">home</i> </button></td>
+          <td>Home activities related group</td>
+        </tr>
+        <tr>
+          <td><button class="mdl-button mdl-js-button mdl-button--icon mdl-button--colored"> <i class="material-icons">favorite</i> </button></td>
+          <td>favorite activities group</td>
+        </tr>
+        <tr>
+          <td><button class="mdl-button mdl-js-button mdl-button--icon mdl-button--colored"> <i class="material-icons">school</i> </button></td>
+          <td>learning related group</td>
+        </tr>
+    
+        <!--activities:::::::::::-->
+        <tr>
+          <td><button class="mdl-button mdl-js-button mdl-button--icon"> <i class="material-icons">brightness_3</i> </button></td>
+          <td>sleeping</td>
+        </tr>
+        <tr>
+          <td><button class="mdl-button mdl-js-button mdl-button--icon"> <i class="material-icons">directions_bike</i> </button></td>
+          <td>biking</td>
+        </tr>
+        <tr>
+          <td><button class="mdl-button mdl-js-button mdl-button--icon"> <i class="material-icons">directions_run</i> </button></td>
+          <td>running</td>
+        </tr>
+        <tr>
+          <td><button class="mdl-button mdl-js-button mdl-button--icon"> <i class="material-icons">directions_walk</i> </button></td>
+          <td>walking</td>
+        </tr>
+        <tr>
+          <td><button class="mdl-button mdl-js-button mdl-button--icon"> <i class="material-icons">restaurant_menu</i> </button></td>
+          <td>eating</td>
+        </tr>
+        <tr>
+          <td><button class="mdl-button mdl-js-button mdl-button--icon"> <i class="material-icons">local_grocery_store</i> </button></td>
+          <td>shopping</td>
+        </tr>
+        <tr>
+          <td><button class="mdl-button mdl-js-button mdl-button--icon"> <i class="material-icons">local_play</i> </button></td>
+          <td>watching movie</td>
+        </tr>
+        <tr>
+          <td><button class="mdl-button mdl-js-button mdl-button--icon"> <i class="material-icons">whatshot</i> </button></td>
+          <td>cooking</td>
+        </tr>
+
+
+      </tbody>
+    </table>
+  </body>
+</html>
+`
+
+func handleIconLab(w http.ResponseWriter, r *http.Request) {
+	fmt.Fprintln(w, UsefulMaterialIcons)
+}
+
 func handleTestLab(w http.ResponseWriter, r *http.Request) {
 	c := appengine.NewContext(r)
 	var recSet []ActivityNameOnly
