@@ -78,20 +78,26 @@ func handleHistory(w http.ResponseWriter, r *http.Request) {
 }
 func handleActivitySearch(w http.ResponseWriter, r *http.Request) {
 	fmt.Println(r.Method)
+	c := appengine.NewContext(r)
 
 	if r.Method == "GET" {
+
+		var dst []helpers.ActivityLog
+		dst = helpers.GetRecomm(c)
+
 		t := template.Must(template.ParseFiles(
 			"html/SearchActivity.html",
+			"html/_ActivityList.html",
 			"html/_SvgButtons.html",
 			"html/_header.html",
 			"html/_mdl.html",
 		))
-		if err := t.Execute(w, nil); err != nil {
+		a := helpers.HomePgData{user.Current(c).String(), len(dst), dst}
+		if err := t.Execute(w, a); err != nil {
 			panic(err)
 		}
 	} else if r.Method == "POST" {
 
-		c := appengine.NewContext(r)
 		var dst []helpers.ActivityLog
 		var f []helpers.Filter // filter slice to store the number filters
 		var OrderBy string

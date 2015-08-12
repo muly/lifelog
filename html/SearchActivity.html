@@ -1,13 +1,17 @@
 <html>
-<head>
-{{template "mdl"}}
-</head>
-<body>
-{{template "headerMenu"}}
-<form action="/activity/search" method="post">
-add an Activity....!!! <br>
-<input type="text" name="activity">
-<input type="submit" name="searchBtn" value="search">
-</form>
-</body>
+	<head>
+		{{template "mdl"}}
+	</head>
+	<body>
+		{{template "headerMenu"}}
+		<form action="/activity/search" method="post">
+			search an Activity....!!! <br>
+			<input type="text" name="activity">
+			<input type="submit" name="searchBtn" value="search">
+		</form>
+
+		below are some recommendations ({{.Cnt}})
+		{{template "ActivityListSearchList" .Activity}}
+
+	</body>
 </html>

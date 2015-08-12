@@ -41,6 +41,19 @@ const ( //Note: the values of these constants will have impact in the templates 
 	ActivityStatusCompleted = "C"
 )
 
+func GetRecomm(c appengine.Context) []ActivityLog { // for now this function returns any activities. actual recommendations will needs to be implemeneted
+
+	parentKey := GetActivityTableKeyByUser(c)
+	recSet := []ActivityLog{}
+
+	activeRecs := datastore.NewQuery("activityRecord").Ancestor(parentKey).Limit(10)
+
+	activeRecs.GetAll(c, &recSet)
+
+	return recSet
+
+}
+
 func GetActivity(c appengine.Context, filters []Filter, orderBy string) []ActivityLog { //[TODO: need to return error]
 	parentKey := GetActivityTableKeyByUser(c)
 	recSet := []ActivityLog{}
