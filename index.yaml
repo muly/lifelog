@@ -20,6 +20,13 @@ indexes:
   ancestor: yes
   properties:
   - name: ActivityName
+  - name: TimeStamp
+    direction: desc
+
+- kind: activityRecord
+  ancestor: yes
+  properties:
+  - name: ActivityName
   - name: Timetamp
 
 - kind: activityRecord

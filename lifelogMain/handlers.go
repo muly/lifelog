@@ -48,7 +48,7 @@ func handleRoot(w http.ResponseWriter, r *http.Request) {
 	// prepare the final data structure to pass to templates: add the user name to the activities list.
 	a := helpers.HomePgData{user.Current(c).String(), len(dst), dst}
 
-	// execute the template whilo passing the required data to be rendered.
+	// execute the template while passing the required data to be rendered.
 	if err := t.Execute(w, a); err != nil {
 		panic(err)
 	}
@@ -76,9 +76,7 @@ func handleHistory(w http.ResponseWriter, r *http.Request) {
 	}
 
 }
-
-//[TODO: need to document this function]
-func handleActivityAdd(w http.ResponseWriter, r *http.Request) {
+func handleActivitySearch(w http.ResponseWriter, r *http.Request) {
 	fmt.Println(r.Method)
 
 	if r.Method == "GET" {
@@ -94,6 +92,53 @@ func handleActivityAdd(w http.ResponseWriter, r *http.Request) {
 	} else if r.Method == "POST" {
 
 		c := appengine.NewContext(r)
+		var dst []helpers.ActivityLog // dst to store the query results
+		var f []helpers.Filter        // filter slice to store the number filters
+		var OrderBy string
+
+		// retrieve the Started activities
+		f = []helpers.Filter{{"ActivityName=", r.FormValue("activity")}}
+		//[TODO: need to convert this to projection query as we just need the activiy names in return]
+		OrderBy = "-TimeStamp"
+		dst = helpers.GetActivity(c, f, OrderBy)
+
+		t := template.Must(template.ParseFiles(
+			"html/home.html",
+			"html/_ActivityList.html",
+			"html/_SvgButtons.html",
+			"html/_mdl.html",
+			"html/_footer.html",
+			"html/_header.html",
+		))
+
+		// prepare the final data structure to pass to templates: add the user name to the activities list.
+		a := helpers.HomePgData{user.Current(c).String(), len(dst), dst}
+		if err := t.Execute(w, a); err != nil {
+			panic(err)
+		}
+
+	}
+}
+
+//[TODO: need to document this function]
+func handleActivityAdd(w http.ResponseWriter, r *http.Request) {
+	fmt.Println(r.Method)
+
+	if r.Method == "GET" {
+		/*t := template.Must(template.ParseFiles(
+			"html/AddActivity.html",
+			"html/_SvgButtons.html",
+			"html/_header.html",
+			"html/_mdl.html",
+		))
+		if err := t.Execute(w, nil); err != nil {
+			panic(err)
+		}*/
+
+	} else if r.Method == "POST" {
+
+		c := appengine.NewContext(r)
+
 		//r.ParseForm()
 		//a.ActivityName = r.Form["activity"][0] // Note: if Form is used instead of FormValue, then it prequisite is to execute ParseForm() before. also Form returns an slice, where as FormValue returns just a string.
 
@@ -104,6 +149,7 @@ func handleActivityAdd(w http.ResponseWriter, r *http.Request) {
 			Status:       helpers.ActivityStatusStarted,
 			UserId:       user.Current(c).String(),
 		}
+
 		helpers.InsertActivity(c, a)
 
 		http.Redirect(w, r, "/", http.StatusFound) // note: if there are any print commands (like fmt.Fprintln) before calling redirect operation, the redirect operation doesn't seams to be working

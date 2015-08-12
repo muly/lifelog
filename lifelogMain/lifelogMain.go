@@ -16,6 +16,7 @@ func init() {
 	// note: order doesn't look to be important, atleast so far
 	http.HandleFunc("/history/", handleHistory)
 	http.HandleFunc("/", handleRoot)
+	http.HandleFunc("/activity/search", handleActivitySearch)
 	http.HandleFunc("/activity/add", handleActivityAdd) // the /activity/ should match with what is in HTML form action ?? not really sure
 	http.HandleFunc("/activity/update", handleActivityUpdate)
 }
