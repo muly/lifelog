@@ -126,8 +126,16 @@ func handleActivitySearch(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
+func handleActivityAddByForm(w http.ResponseWriter, r *http.Request) {
+
+	ActivityName := r.FormValue("activity")
+
+	handleActivityAdd(w, r, ActivityName)
+
+}
+
 //[TODO: need to document this function]
-func handleActivityAdd(w http.ResponseWriter, r *http.Request) {
+func handleActivityAddByURL(w http.ResponseWriter, r *http.Request) {
 	fmt.Println(r.Method)
 
 	//[TODO: query param approach is not the effecient way to handle, as the parameters values in the url are visible to anyone,a nd it could pose security issues. so, need to explore the way in which we can pass the values as part of the HTTP header/body instead of URL]
@@ -135,10 +143,16 @@ func handleActivityAdd(w http.ResponseWriter, r *http.Request) {
 	qs := r.RequestURI[i+1 : len(r.RequestURI)] //  substring it and then
 
 	m, _ := url.ParseQuery(qs) // parse it
-	c := appengine.NewContext(r)
 
+	ActivityName := m["ActivityName"][0]
+	handleActivityAdd(w, r, ActivityName)
+
+}
+
+func handleActivityAdd(w http.ResponseWriter, r *http.Request, ActivityName string) {
+	c := appengine.NewContext(r)
 	a := helpers.ActivityLog{
-		ActivityName: m["ActivityName"][0],
+		ActivityName: ActivityName,
 		TimeStamp:    time.Now(),
 		StartTime:    time.Now(),
 		Status:       helpers.ActivityStatusStarted,
@@ -147,8 +161,7 @@ func handleActivityAdd(w http.ResponseWriter, r *http.Request) {
 
 	helpers.InsertActivity(c, a)
 
-	http.Redirect(w, r, "/", http.StatusFound) // note: if there are any print commands (like fmt.Fprintln) before calling redirect operation, the redirect operation doesn't seams to be working
-
+	http.Redirect(w, r, "/", http.StatusFound)
 }
 
 // handleActivityUpdate() handles the logic for "/activity/update" route.

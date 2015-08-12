@@ -13,5 +13,11 @@
 		below are some recommendations ({{.Cnt}})
 		{{template "ActivityListSearchList" .Activity}}
 
+		<form action="/activity/addbyform" method="post">
+			add an new Activity<br>
+			<input type="text" name="activity">
+			<input type="submit" name="AddBtn" value="add">
+		</form>
+
 	</body>
 </html>

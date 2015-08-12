@@ -14,7 +14,12 @@
 		<p>below are the related activities ({{.Cnt}})</p>
 		{{template "ActivityListSearchList" .Activity}}
 
-		{{template "footer"}}
+		<form action="/activity/addbyform" method="post">
+			add an new Activity<br>
+			<input type="text" name="activity">
+			<input type="submit" name="AddBtn" value="add">
+		</form>
 
-</body>
+
+	</body>
 </html>

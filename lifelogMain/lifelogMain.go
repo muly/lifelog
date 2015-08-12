@@ -17,15 +17,10 @@ func init() {
 	http.HandleFunc("/history/", handleHistory)
 	http.HandleFunc("/", handleRoot)
 	http.HandleFunc("/activity/search", handleActivitySearch)
-	http.HandleFunc("/activity/add", handleActivityAdd) // the /activity/ should match with what is in HTML form action ?? not really sure
+	http.HandleFunc("/activity/addbyurl", handleActivityAddByURL) // the /activity/ should match with what is in HTML form action ?? not really sure
+	http.HandleFunc("/activity/addbyform", handleActivityAddByForm)
 	http.HandleFunc("/activity/update", handleActivityUpdate)
 	http.HandleFunc("/testlab", handleTestLab) // not real code. just for practicing new concepts and experimenting. will be removed eventually
 
 	http.HandleFunc("/iconlab", handleIconLab) // not real code. just for practicing new concepts and experimenting. will be removed eventually
 }
-
-/*
-notes: lessons learns from errors;
-1) text/template or html/template did not matter
-2) HandleFunc pattern should match the form's action; the match should be exact, i.e. case sensitive as well as the / should also match. looks like that this is not true always, or may be it is true but the chrome browser cache is handling it somehow.
-*/
