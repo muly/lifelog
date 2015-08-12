@@ -36,3 +36,13 @@
 	{{end}}
 </ul>
 {{end}}
+
+
+{{define "ActivityListSearchList"}}
+<ul>{{range .}}
+	<li><a href="/activity/add?ActivityName={{.ActivityName}}">{{.ActivityName}} </a>
+	</li>
+	{{end}}
+</ul>
+{{end}}
+

@@ -19,6 +19,7 @@ func init() {
 	http.HandleFunc("/activity/search", handleActivitySearch)
 	http.HandleFunc("/activity/add", handleActivityAdd) // the /activity/ should match with what is in HTML form action ?? not really sure
 	http.HandleFunc("/activity/update", handleActivityUpdate)
+	http.HandleFunc("/testlab", handleTestLab) // not real code. just for practicing new concepts and experimenting. will be removed eventually
 }
 
 /*
