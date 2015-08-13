@@ -45,6 +45,8 @@ func handleRoot(w http.ResponseWriter, r *http.Request) {
 		"html/_header.html",
 	))
 
+	//[TODO: need to merge the dst with the activity icon information before passing to template]
+
 	// prepare the final data structure to pass to templates: add the user name to the activities list.
 	a := helpers.HomePgData{user.Current(c).String(), len(dst), dst}
 

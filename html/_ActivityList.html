@@ -30,7 +30,9 @@
 
 {{define "ActivityListSpecificFields"}}
 <ul>{{range .}}
-	<li>{{.ActivityName}} {{.Status}}
+	<li>
+		
+		{{.ActivityName}} {{.Status}}
 		{{template "3buttonLogic" .}}
 	</li>
 	{{end}}
@@ -44,4 +46,9 @@
 	</li>
 	{{end}}
 </ul>
+{{end}}
+
+
+{{define "ActivityIcon"}}
+<button class="mdl-button mdl-js-button mdl-button--icon {{if (eq .IsGroup true)}} mdl-button--colored {{end}}"> <i class="material-icons">{{.MdlIconCode}}</i> </button>
 {{end}}

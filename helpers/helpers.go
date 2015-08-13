@@ -33,6 +33,12 @@ type Filter struct {
 	Right string
 }
 
+type MdlIcons struct {
+	MdlIconCode  string
+	ActivityName string
+	IsGroup      bool
+}
+
 //[TODO: need to document this section]
 const ( //Note: the values of these constants will have impact in the templates (expecially "_ActivityList.html"), so beaware while changing these values
 	ActivityStatusStarted = "S"
@@ -40,6 +46,25 @@ const ( //Note: the values of these constants will have impact in the templates 
 	//ActivityStatusReStarted = "R" //"restart" is a special case of "start", where in the previous state is a brief "pause" // restart state removed to simplify the logic.
 	ActivityStatusCompleted = "C"
 )
+
+func GetIconsData() []MdlIcons {
+	m := []MdlIcons{
+		{"laptop", "work related group", true},
+		{"home", "Home activities related group", true},
+		{"favorite", "favorite activities group", true},
+		{"school", "learning related group", true},
+		{"brightness_3", "sleeping", false},
+		{"directions_bike", "biking", false},
+		{"directions_run", "running", false},
+		{"directions_walk", "walking", false},
+		{"restaurant_menu", "eating", false},
+		{"local_grocery_store", "shopping", false},
+		{"local_play", "watching movie", false},
+		{"whatshot", "cooking", false},
+	}
+
+	return m
+}
 
 func GetRecomm(c appengine.Context) []ActivityLog { // for now this function returns any activities. actual recommendations will needs to be implemeneted
 
