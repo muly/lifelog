@@ -20,7 +20,8 @@
 
 {{define "ActivityListAllFields"}}
 <ul>{{range .}}
-	<li>{{.ActivityName}} {{.Status}}
+	<li>{{template "ActivityIcon" .}}
+		{{.ActivityName}} {{.Status}}
 		{{template "3buttonLogic" .}}
 		&nbsp;{{if eq .Status "C"}} {{.ElapsedTime}} {{end}}
 	</li>
@@ -31,7 +32,7 @@
 {{define "ActivityListSpecificFields"}}
 <ul>{{range .}}
 	<li>
-		
+		{{template "ActivityIcon" .}}
 		{{.ActivityName}} {{.Status}}
 		{{template "3buttonLogic" .}}
 	</li>
@@ -42,7 +43,9 @@
 
 {{define "ActivityListSearchList"}}
 <ul>{{range .}}
-	<li><a href="/activity/addbyurl?ActivityName={{.ActivityName}}">{{.ActivityName}} </a>
+	<li>
+		{{template "ActivityIcon" .}}
+		<a href="/activity/addbyurl?ActivityName={{.ActivityName}}">{{.ActivityName}} </a>
 	</li>
 	{{end}}
 </ul>

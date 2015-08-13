@@ -21,11 +21,17 @@ type ActivityLog struct {
 	Status       string
 }
 
+type ActivityLog2 struct {
+	ActivityLog
+	MdlIconCode string
+	IsGroup     bool
+}
+
 //[TODO: need to document this section]
 type HomePgData struct {
 	UserName string
 	Cnt      int
-	Activity []ActivityLog
+	Activity []ActivityLog2
 }
 
 type Filter struct {
@@ -34,10 +40,11 @@ type Filter struct {
 }
 
 type MdlIcons struct {
+	ActivityName string // this field is unique
 	MdlIconCode  string
-	ActivityName string
 	IsGroup      bool
 }
+type MdlIconsMap map[string]MdlIcons
 
 //[TODO: need to document this section]
 const ( //Note: the values of these constants will have impact in the templates (expecially "_ActivityList.html"), so beaware while changing these values
@@ -47,23 +54,42 @@ const ( //Note: the values of these constants will have impact in the templates 
 	ActivityStatusCompleted = "C"
 )
 
-func GetIconsData() []MdlIcons {
-	m := []MdlIcons{
-		{"laptop", "work related group", true},
-		{"home", "Home activities related group", true},
-		{"favorite", "favorite activities group", true},
-		{"school", "learning related group", true},
-		{"brightness_3", "sleeping", false},
-		{"directions_bike", "biking", false},
-		{"directions_run", "running", false},
-		{"directions_walk", "walking", false},
-		{"restaurant_menu", "eating", false},
-		{"local_grocery_store", "shopping", false},
-		{"local_play", "watching movie", false},
-		{"whatshot", "cooking", false},
+func GetActivityIconsData() (a []MdlIcons) { // [TODO: eventually store this in datastore and retrieve from there, instead of ha]
+	a = []MdlIcons{
+		{"work related group", "laptop", true},
+		{"Home activities related group", "home", true},
+		{"favorite activities group", "favorite", true},
+		{"learning related group", "school", true},
+		{"sleeping", "brightness_3", false},
+		{"biking", "directions_bike", false},
+		{"running", "directions_run", false},
+		{"walking", "directions_walk", false},
+		{"eating", "restaurant_menu", false},
+		{"shopping", "local_grocery_store", false},
+		{"watching movie", "local_play", false},
+		{"cooking", "whatshot", false},
+		{"sleep", "brightness_3", false},
 	}
+	return
+}
 
+func GetIconsMap() MdlIconsMap {
+	m := make(MdlIconsMap)
+	a := GetActivityIconsData()
+	for _, s := range a {
+		m[s.ActivityName] = s
+	}
 	return m
+}
+
+func AddIconsToActivityLog(a1 []ActivityLog) (a2 []ActivityLog2) { //[TODO: needs revisit for correctly naming the variables and function name]
+	a2 = make([]ActivityLog2, len(a1))
+	m := GetIconsMap()
+
+	for i, a := range a1 {
+		a2[i] = ActivityLog2{a, m[a.ActivityName].MdlIconCode, m[a.ActivityName].IsGroup}
+	}
+	return a2
 }
 
 func GetRecomm(c appengine.Context) []ActivityLog { // for now this function returns any activities. actual recommendations will needs to be implemeneted
@@ -127,9 +153,9 @@ func UpdateActivity(c appengine.Context, ActivityName string, StartTime string, 
 	q = q.Filter("StartTime =", t)
 	q = q.Limit(1) // just in case if the above keys result in more than 1 record, applying Limit(1) to set only 1 record [TODO: not sure if this makes sense]
 
-	dst := ActivityLog{}
+	actiLog := ActivityLog{}
 
-	k, err := q.GetAll(c, &dst)
+	k, err := q.GetAll(c, &actiLog)
 	if err != nil {
 		return
 	}

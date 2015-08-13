@@ -20,7 +20,7 @@ type ActivityNameOnly struct {
 
 func handleLabIcon(w http.ResponseWriter, r *http.Request) {
 
-	a := helpers.GetIconsData()
+	a := helpers.GetActivityIconsData()
 
 	t := template.Must(template.ParseFiles(
 		"html/test.html",

@@ -17,24 +17,25 @@ import (
 //[TODO: need to document this function]
 func handleRoot(w http.ResponseWriter, r *http.Request) {
 	c := appengine.NewContext(r)
-	var dst []helpers.ActivityLog // dst to store the query results
-	var f []helpers.Filter        // filter slice to store the number filters
+	var f []helpers.Filter // filter slice to store the number filters
 	var OrderBy string
 
 	// retrieve the Started activities
 	f = []helpers.Filter{{"Status=", helpers.ActivityStatusStarted}}
 	OrderBy = "-TimeStamp"
-	dst = helpers.GetActivity(c, f, OrderBy)
+	actiLogS := helpers.GetActivity(c, f, OrderBy)
 	//............................................
 
 	// retrieve the Paused activities
 	// since the datastore query doesn't support filter on multiple values (like an IN operator or OR operator in SQL), we are doing it in 2 passes and storing the results in the same variable (i.e merging the result sets).
 	f = []helpers.Filter{{"Status=", helpers.ActivityStatusPaused}}
 	OrderBy = "-TimeStamp"
-	dst2 := helpers.GetActivity(c, f, OrderBy)
+	actiLogP := helpers.GetActivity(c, f, OrderBy)
 
 	// merge the started and paused activities
-	dst = append(dst, dst2...)
+	actiLog := append(actiLogS, actiLogP...)
+
+	actiLogIcn := helpers.AddIconsToActivityLog(actiLog)
 
 	t := template.Must(template.ParseFiles(
 		"html/home.html",
@@ -45,10 +46,10 @@ func handleRoot(w http.ResponseWriter, r *http.Request) {
 		"html/_header.html",
 	))
 
-	//[TODO: need to merge the dst with the activity icon information before passing to template]
+	//[TODO: need to merge the actiLog with the activity icon information before passing to template]
 
 	// prepare the final data structure to pass to templates: add the user name to the activities list.
-	a := helpers.HomePgData{user.Current(c).String(), len(dst), dst}
+	a := helpers.HomePgData{user.Current(c).String(), len(actiLog), actiLogIcn}
 
 	// execute the template while passing the required data to be rendered.
 	if err := t.Execute(w, a); err != nil {
@@ -59,9 +60,7 @@ func handleRoot(w http.ResponseWriter, r *http.Request) {
 //[TODO: need to document this function]
 func handleHistory(w http.ResponseWriter, r *http.Request) {
 	c := appengine.NewContext(r)
-	var dst []helpers.ActivityLog
-
-	dst = helpers.GetActivity(c, nil, "-TimeStamp")
+	actiLog := helpers.GetActivity(c, nil, "-TimeStamp")
 
 	t := template.Must(template.ParseFiles(
 		"html/history.html",
@@ -71,36 +70,37 @@ func handleHistory(w http.ResponseWriter, r *http.Request) {
 		"html/_footer.html",
 		"html/_header.html",
 	))
-	a := helpers.HomePgData{user.Current(c).String(), len(dst), dst}
+
+	actiLogIcn := helpers.AddIconsToActivityLog(actiLog)
+	a := helpers.HomePgData{user.Current(c).String(), len(actiLog), actiLogIcn}
 
 	if err := t.Execute(w, a); err != nil {
 		panic(err)
 	}
-
 }
+
 func handleActivitySearch(w http.ResponseWriter, r *http.Request) {
 	fmt.Println(r.Method)
 	c := appengine.NewContext(r)
 
+	var t *template.Template
+	var actiLog []helpers.ActivityLog
+
 	if r.Method == "GET" {
 
-		var dst []helpers.ActivityLog
-		dst = helpers.GetRecomm(c)
+		actiLog = helpers.GetRecomm(c)
 
-		t := template.Must(template.ParseFiles(
+		t = template.Must(template.ParseFiles(
 			"html/SearchActivity.html",
 			"html/_ActivityList.html",
 			"html/_SvgButtons.html",
 			"html/_header.html",
 			"html/_mdl.html",
 		))
-		a := helpers.HomePgData{user.Current(c).String(), len(dst), dst}
-		if err := t.Execute(w, a); err != nil {
-			panic(err)
-		}
+
 	} else if r.Method == "POST" {
 
-		var dst []helpers.ActivityLog
+		//
 		var f []helpers.Filter // filter slice to store the number filters
 		var OrderBy string
 
@@ -108,9 +108,9 @@ func handleActivitySearch(w http.ResponseWriter, r *http.Request) {
 		f = []helpers.Filter{{"ActivityName=", r.FormValue("activity")}}
 
 		OrderBy = "-TimeStamp"
-		dst = helpers.GetActivity(c, f, OrderBy)
+		actiLog = helpers.GetActivity(c, f, OrderBy)
 
-		t := template.Must(template.ParseFiles(
+		t = template.Must(template.ParseFiles(
 			"html/searchResults.html",
 			"html/_ActivityList.html",
 			"html/_SvgButtons.html",
@@ -118,14 +118,15 @@ func handleActivitySearch(w http.ResponseWriter, r *http.Request) {
 			"html/_footer.html",
 			"html/_header.html",
 		))
-		// prepare the final data structure to pass to templates: add the user name to the activities list.
-		a := helpers.HomePgData{user.Current(c).String(), len(dst), dst}
-
-		if err := t.Execute(w, a); err != nil {
-			panic(err)
-		}
 
 	}
+
+	actiLogIcn := helpers.AddIconsToActivityLog(actiLog)
+	a := helpers.HomePgData{user.Current(c).String(), len(actiLog), actiLogIcn}
+	if err := t.Execute(w, a); err != nil {
+		panic(err)
+	}
+
 }
 
 func handleActivityAddByForm(w http.ResponseWriter, r *http.Request) {
