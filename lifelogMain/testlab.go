@@ -3,15 +3,17 @@ package ActivityLoggerMain
 import (
 	"appengine"
 	"appengine/datastore"
+	"appengine/search"
 	//"appengine/user"
 	//"errors"
 	"fmt"
 	"helpers"
 	"html/template"
 	"net/http"
+	"strconv"
 	//"net/url"
 	//"strings"
-	//"time"
+	"time"
 )
 
 type ActivityNameOnly struct {
@@ -65,6 +67,65 @@ func handleLabTest(w http.ResponseWriter, r *http.Request) {
 
 	//	fmt.Fprintln(w, recSet)
 	// recSet
+
+}
+
+func handleActivityIndexLab(w http.ResponseWriter, r *http.Request) {
+	c := appengine.NewContext(r)
+	s := strconv.Itoa(time.Now().Hour()) + strconv.Itoa(time.Now().Minute())
+	s = s + " Google"
+
+	i, _ := search.Open("ActivityLog")
+	/*
+				a := ActivityNameOnly{s}
+				id, err := i.Put(c, "", &a)
+				if err != nil {
+					panic(err)
+				}
+				fmt.Fprintln(w, "Put: ", id)
+
+				dst := ActivityNameOnly{}
+				i.Get(c, id, &dst)
+				fmt.Fprintln(w, "Get : ", dst)
+
+
+
+
+			for t := i.Search(c, `ActivityName:index`, nil); ; {
+				fmt.Fprintln(w, "Search: ", t.Count())
+
+				dst := ActivityNameOnly{}
+				_, err := t.Next(&dst)
+				if err == search.Done {
+					break
+				}
+				fmt.Fprintln(w, "Search: ", dst)
+			}
+
+
+		src := "index"
+		t := i.Search(c, `ActivityName:`+src, nil)
+
+		dst := make([]ActivityNameOnly, 10)
+		for i := 0; ; i++ { //TODO: is there a better way to handle the loop for search output? need to research
+			_, err := t.Next(&dst[i])
+			if err == search.Done {
+				break
+			}
+		}
+		fmt.Fprintln(w, "Search f: ", dst)
+	*/
+	dst, _ := helpers.FullTextSearchActivity(c, "index", w)
+	fmt.Fprintln(w, "Search f: ", dst)
+
+	for t := i.List(c, nil); ; {
+		dst := ActivityNameOnly{}
+		_, err := t.Next(&dst)
+		if err == search.Done {
+			break
+		}
+		fmt.Fprintln(w, "List: ", dst)
+	}
 
 }
 

@@ -84,7 +84,7 @@ func handleActivitySearch(w http.ResponseWriter, r *http.Request) {
 	c := appengine.NewContext(r)
 
 	var t *template.Template
-	var actiLog []helpers.ActivityLog
+	var actiLog []helpers.ActivityLog //TODO: need to rename actiLog to actiLogs as it can hold more than one
 
 	if r.Method == "GET" {
 
@@ -100,16 +100,11 @@ func handleActivitySearch(w http.ResponseWriter, r *http.Request) {
 
 	} else if r.Method == "POST" {
 
-		//
-		var f []helpers.Filter // filter slice to store the number filters
-		var OrderBy string
-
-		// retrieve the Started activities
-		f = []helpers.Filter{{"ActivityName=", r.FormValue("activity")}}
-
-		OrderBy = "-TimeStamp"
-		actiLog = helpers.GetActivity(c, f, OrderBy)
-
+		a, _ := helpers.FullTextSearchActivity(c, r.FormValue("activity"), w)
+		actiLog = make([]helpers.ActivityLog, len(a))
+		for i := range a { //TODO: looping and retrieving for each activity as I'm not sure of direct way as of now
+			actiLog[i].ActivityName = a[i].ActivityName
+		}
 		t = template.Must(template.ParseFiles(
 			"html/searchResults.html",
 			"html/_ActivityList.html",
@@ -118,6 +113,8 @@ func handleActivitySearch(w http.ResponseWriter, r *http.Request) {
 			"html/_footer.html",
 			"html/_header.html",
 		))
+
+		//fmt.Fprintln(w, "Search: ", a)
 
 	}
 
@@ -163,6 +160,7 @@ func handleActivityAdd(w http.ResponseWriter, r *http.Request, ActivityName stri
 	}
 
 	helpers.InsertActivity(c, a)
+	helpers.AddActivityToIndex(c, a, w)
 
 	http.Redirect(w, r, "/", http.StatusFound)
 }
