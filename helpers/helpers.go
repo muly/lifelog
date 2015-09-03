@@ -98,12 +98,12 @@ func AddIconsToActivityLog(a1 []ActivityLog) (a2 []ActivityLog2) { //[TODO: need
 	return a2
 }
 
-func GetRecomm(c appengine.Context) []ActivityLog { // for now this function returns any activities. actual recommendations will needs to be implemeneted
+func GetRecomm(c appengine.Context) []ActivityLog { //TODO: for now this function returns any activities. actual recommendations will needs to be implemeneted
 
 	parentKey := GetActivityTableKeyByUser(c)
 	recSet := []ActivityLog{}
 
-	activeRecs := datastore.NewQuery("activityRecord").Ancestor(parentKey).Limit(10)
+	activeRecs := datastore.NewQuery("activityRecord").Ancestor(parentKey).Limit(10) //TODO: create a constant and replace "activityRecord" with that constant, in this line and all other lines of code that refer it.
 
 	activeRecs.GetAll(c, &recSet)
 
