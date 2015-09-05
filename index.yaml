@@ -16,3 +16,9 @@ indexes:
   - name: Status
   - name: TimeStamp
     direction: desc
+
+- kind: activityRecord
+  ancestor: yes
+  properties:
+  - name: TimeStamp
+    direction: desc

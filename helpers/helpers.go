@@ -146,7 +146,7 @@ func InsertActivity(c appengine.Context, rec ActivityLog) (err error) {
 }
 
 //
-func UpdateActivity(c appengine.Context, ActivityName string, StartTime string, Status string, NewStatus string) (err error) {
+func UpdateActivity(c appengine.Context, ActivityName string, SubTask string, StartTime string, Status string, NewStatus string) (err error) {
 
 	parentKey := GetActivityTableKeyByUser(c)
 
@@ -155,8 +155,9 @@ func UpdateActivity(c appengine.Context, ActivityName string, StartTime string, 
 
 	t, _ := time.Parse("2006-01-02 15:04:05.999999 -0700 MST", StartTime) // the first parameter of Parse should be in correct format that matches the way the data is stored in the datastore, otherwise, it will not retrieve correctly. [TODO: need to handle the error so that we know it in case if the parse fails because of format incompatibility]
 
-	// considering the ActivityName, TimeStamp (user is already covered by the Context) as the keys suffecient enough to uniquely pull a record, they are applied to the query filters
+	// considering the ActivityName, SubTask, StartTime (user is already covered by the Context) as the keys suffecient enough to uniquely pull a record, they are applied to the query filters
 	q = q.Filter("ActivityName=", ActivityName) //[TODO: need to see if there is any other way to retrieve the value instead of having to access ysing the array[0]]
+	q = q.Filter("SubTask=", SubTask)
 	q = q.Filter("StartTime =", t)
 	q = q.Limit(1) // just in case if the above keys result in more than 1 record, applying Limit(1) to set only 1 record [TODO: not sure if this makes sense]
 
@@ -213,6 +214,7 @@ func HandleActivityStatusChange(c appengine.Context, key *datastore.Key, currSta
 	} else if (currStatus == ActivityStatusCompleted && newStatus == ActivityStatusStarted) || (currStatus == ActivityStatusPaused && newStatus == ActivityStatusStarted) { //“complete” to “start”, “pause” to “start”
 		// prepare new record set:
 		newRec.ActivityName = currRec.ActivityName // copy the Activity Name from current record
+		newRec.SubTask = currRec.SubTask           // copy the Sub Task from current record
 		newRec.UserId = currRec.UserId             // copy the Userid from current record
 		newRec.Status = newStatus                  // use the new status
 		newRec.TimeStamp = time.Now()              // set the timestamp as now

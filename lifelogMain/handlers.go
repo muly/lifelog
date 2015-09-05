@@ -178,7 +178,7 @@ func handleActivityUpdate(w http.ResponseWriter, r *http.Request) {
 	m, _ := url.ParseQuery(qs) // parse it
 	c := appengine.NewContext(r)
 
-	err := helpers.UpdateActivity(c, m["ActivityName"][0], m["StartTime"][0], m["Status"][0], m["NewStatus"][0])
+	err := helpers.UpdateActivity(c, m["ActivityName"][0], m["SubTask"][0], m["StartTime"][0], m["Status"][0], m["NewStatus"][0])
 
 	if err != nil {
 		http.Error(w, "Error while changing the status: "+err.Error(), http.StatusInternalServerError)
