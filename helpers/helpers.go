@@ -15,6 +15,7 @@ import (
 type ActivityLog struct {
 	UserId       string //[TODO: not sure if I really need this here. if it can be retrieved from context, or via some other method, we should be good and secure by removing it from here]
 	ActivityName string
+	SubTask      string
 	TimeStamp    time.Time //[TODO: need to evaluate if this field is required as it always will have the same value as that of StartTime]
 	StartTime    time.Time
 	EndTime      time.Time

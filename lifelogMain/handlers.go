@@ -96,6 +96,7 @@ func handleActivitySearch(w http.ResponseWriter, r *http.Request) {
 			"html/_SvgButtons.html",
 			"html/_header.html",
 			"html/_mdl.html",
+			"html/activityForms.html",
 		))
 
 	} else if r.Method == "POST" {
@@ -112,6 +113,7 @@ func handleActivitySearch(w http.ResponseWriter, r *http.Request) {
 			"html/_mdl.html",
 			"html/_footer.html",
 			"html/_header.html",
+			"html/activityForms.html",
 		))
 
 		//fmt.Fprintln(w, "Search: ", a)
@@ -129,8 +131,9 @@ func handleActivitySearch(w http.ResponseWriter, r *http.Request) {
 func handleActivityAddByForm(w http.ResponseWriter, r *http.Request) {
 
 	ActivityName := r.FormValue("activity")
+	SubTask := r.FormValue("subtask")
 
-	handleActivityAdd(w, r, ActivityName)
+	handleActivityAdd(w, r, ActivityName, SubTask)
 
 }
 
@@ -145,14 +148,15 @@ func handleActivityAddByURL(w http.ResponseWriter, r *http.Request) {
 	m, _ := url.ParseQuery(qs) // parse it
 
 	ActivityName := m["ActivityName"][0]
-	handleActivityAdd(w, r, ActivityName)
+	handleActivityAdd(w, r, ActivityName, "")
 
 }
 
-func handleActivityAdd(w http.ResponseWriter, r *http.Request, ActivityName string) {
+func handleActivityAdd(w http.ResponseWriter, r *http.Request, ActivityName string, SubTask string) {
 	c := appengine.NewContext(r)
 	a := helpers.ActivityLog{
 		ActivityName: ActivityName,
+		SubTask:      SubTask,
 		TimeStamp:    time.Now(),
 		StartTime:    time.Now(),
 		Status:       helpers.ActivityStatusStarted,

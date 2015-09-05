@@ -1,0 +1,22 @@
+
+
+{{define "searchActivity"}}
+		<form action="/activity/search" method="post">
+			 <br>
+			<input type="text" name="activity" placeholder="search an Activity....!!!">
+			<input type="submit" name="searchBtn" value="search">
+		<!-- to show search icon instead of button, but work is not complete yet	<a href="/activity/search"  type="submit" id="search-activity" class="mdl-button mdl-js-button mdl-button--fab mdl-button--colored">
+      			<i class="material-icons">search</i>
+			</a>-->
+		</form>
+
+{{end}}
+
+{{define "addActivityByForm"}}
+		<form action="/activity/addbyform" method="post">
+			add an new Activity<br>
+			<input type="text" name="activity" placeholder="activity name">
+			<input type="text" name="subtask" placeholder="sub task"/>
+			<input type="submit" name="AddBtn" value="add">
+		</form>
+{{end}}

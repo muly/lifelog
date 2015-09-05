@@ -21,7 +21,9 @@
 {{define "ActivityListAllFields"}}
 <ul>{{range .}}
 	<li>{{template "ActivityIcon" .}}
-		{{.ActivityName}} {{.Status}}
+		{{.ActivityName}} 
+		{{if ne .SubTask ""}} [{{.SubTask}}] {{end}} 
+		{{.Status}}
 		{{template "3buttonLogic" .}}
 		&nbsp;{{if eq .Status "C"}} {{.ElapsedTime}} {{end}}
 	</li>
@@ -33,7 +35,9 @@
 <ul>{{range .}}
 	<li>
 		{{template "ActivityIcon" .}}
-		{{.ActivityName}} {{.Status}}
+		{{.ActivityName}} 
+		{{if ne .SubTask ""}} [{{.SubTask}}] {{end}}
+		{{.Status}}
 		{{template "3buttonLogic" .}}
 	</li>
 	{{end}}
