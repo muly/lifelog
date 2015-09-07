@@ -1,4 +1,4 @@
-package ActivityLoggerMain
+package logrMain
 
 import (
 	//"appengine"
@@ -6,6 +6,7 @@ import (
 	//"appengine/user"
 	//"fmt"
 	//"html/template"
+	"ctrl"
 	"net/http"
 	//"net/url"
 	//"strings"
@@ -14,12 +15,14 @@ import (
 
 func init() {
 	// note: order doesn't look to be important, atleast so far
-	http.HandleFunc("/history/", handleHistory)
-	http.HandleFunc("/", handleRoot)
-	http.HandleFunc("/activity/search", handleActivitySearch)
-	http.HandleFunc("/activity/addbyurl", handleActivityAddByURL) // the /activity/ should match with what is in HTML form action ?? not really sure
-	http.HandleFunc("/activity/addbyform", handleActivityAddByForm)
-	http.HandleFunc("/activity/update", handleActivityUpdate)
+	http.HandleFunc("/history/", ctrl.HandleHistory)
+	http.HandleFunc("/", ctrl.HandleRoot)
+	http.HandleFunc("/activity/search", ctrl.HandleActivitySearch)
+
+	http.HandleFunc("/activity/addbyurl", ctrl.HandleActivityAddByURL) // the /activity/ should match with what is in HTML form action ?? not really sure
+	http.HandleFunc("/activity/addbyform", ctrl.HandleActivityAddByForm)
+	http.HandleFunc("/activity/update", ctrl.HandleActivityUpdate)
+
 	http.HandleFunc("/labindex", handleActivityIndexLab)
 	http.HandleFunc("/labtest", handleLabTest) // not real code. just for practicing new concepts and experimenting. will be removed eventually
 	http.HandleFunc("/labicon", handleLabIcon) // not real code. just for practicing new concepts and experimenting. will be removed eventually

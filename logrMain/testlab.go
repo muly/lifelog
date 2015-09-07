@@ -1,4 +1,4 @@
-package ActivityLoggerMain
+package logrMain
 
 import (
 	"appengine"
@@ -7,8 +7,8 @@ import (
 	//"appengine/user"
 	//"errors"
 	"fmt"
-	"helpers"
 	"html/template"
+	"modl"
 	"net/http"
 	"strconv"
 	//"net/url"
@@ -22,7 +22,7 @@ type ActivityNameOnly struct {
 
 func handleLabIcon(w http.ResponseWriter, r *http.Request) {
 
-	a := helpers.GetActivityIconsData()
+	a := modl.ActivityGetIconsData()
 
 	t := template.Must(template.ParseFiles(
 		"html/test.html",
@@ -39,11 +39,11 @@ func handleLabIcon(w http.ResponseWriter, r *http.Request) {
 func handleLabTest(w http.ResponseWriter, r *http.Request) {
 	c := appengine.NewContext(r)
 	var recSet []ActivityNameOnly
-	parentKey := helpers.GetActivityTableKeyByUser(c)
+	parentKey := modl.GetActivityTableKeyByUser(c)
 
 	activeRecs := datastore.NewQuery("activityRecord").Ancestor(parentKey)
 
-	//activeRecs = activeRecs.Filter("Status=", helpers.ActivityStatusStarted)
+	//activeRecs = activeRecs.Filter("Status=", modl.ActivityStatusStarted)
 	activeRecs = activeRecs.Project("ActivityName") //.Distinct() // pulling distinct activity names only
 
 	activeRecs = activeRecs.Filter("ActivityName =", "search me")
@@ -115,7 +115,7 @@ func handleActivityIndexLab(w http.ResponseWriter, r *http.Request) {
 		}
 		fmt.Fprintln(w, "Search f: ", dst)
 	*/
-	dst, _ := helpers.FullTextSearchActivity(c, "index", w)
+	dst, _ := modl.FullTextSearchActivity(c, "index", w)
 	fmt.Fprintln(w, "Search f: ", dst)
 
 	for t := i.List(c, nil); ; {
