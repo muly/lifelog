@@ -1,23 +1,15 @@
 package helpers
 
 import (
-	"appengine/aetest"
-	"appengine/datastore"
+	//"appengine/aetest"
+	//"appengine/datastore"
 	//"appengine/user"
-	"testing"
-	"time"
+	//"testing"
+	//"time"
 )
 
-func TestAdd(t *testing.T) {
-	x := 1
-	y := 2
-	want := 3
 
-	if got := add(x, y); got != want {
-		t.Error("wanted: ", want, ", but got: ", got)
-	}
-}
-
+/*
 func TestInsertActivity_Experimenting(t *testing.T) {
 
 	c, err := aetest.NewContext(nil)
@@ -45,7 +37,7 @@ func TestInsertActivity_Experimenting(t *testing.T) {
 	}
 }
 
-/*
+
 func TestInsertActivity_thatPASS(t *testing.T) {
 
 	c, err := aetest.NewContext(nil)
