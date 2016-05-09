@@ -10,10 +10,10 @@ import (
 func init() {
 
 	r := mux.NewRouter()
-	r.HandleFunc("/", handler)
+	r.HandleFunc("/", handler).Methods("GET")
 	http.Handle("/", r)
 }
 
 func handler(w http.ResponseWriter, r *http.Request) {
-	fmt.Fprint(w, "Hello, world!")
+	fmt.Fprint(w, "Hello, world!@@@@@@@@")
 }
