@@ -6,10 +6,8 @@ import (
 
 type (
 	Activity struct {
-		Name      string
-		GoalID    string
-		StartTime string
-		EndTime   string
+		Name   string
+		GoalID string
 	}
 
 	Goal struct {
@@ -17,7 +15,7 @@ type (
 		Notes string
 	}
 
-	AcctivityLog struct {
+	ActivityLog struct {
 		ActivityName string
 		StartTime    time.Time
 		EndTime      time.Time
