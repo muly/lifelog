@@ -19,13 +19,21 @@ func HandleGoalPost(w http.ResponseWriter, r *http.Request) {
 
 	if err := json.NewDecoder(r.Body).Decode(&goal); err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
 	}
 
 	goal.SetDefaults()
 
-	goal.Post(c)
+	if err := goal.Post(c); err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
 
-	//TODO: need to return the created record as json
+	if err := json.NewEncoder(w).Encode(goal); err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
 	w.WriteHeader(http.StatusCreated)
 }
 
@@ -87,4 +95,13 @@ func HandleGoalDelete(w http.ResponseWriter, r *http.Request) {
 
 	w.WriteHeader(http.StatusOK)
 
+}
+
+func HandleActivityLogDelete(w http.ResponseWriter, r *http.Request) {
+}
+func HandleActivityPut(w http.ResponseWriter, r *http.Request) {
+}
+func HandleGoalPut(w http.ResponseWriter, r *http.Request) {
+}
+func HandleGoalsGet(w http.ResponseWriter, r *http.Request) {
 }

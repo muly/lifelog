@@ -24,6 +24,13 @@ func (goal *Goal) Post(c context.Context) error {
 	key := datastore.NewKey(c, "Goal", util.StringKey(goal.Name), 0, nil)
 
 	_, err := datastore.Put(c, key, goal)
+	if err != nil {
+		return err
+	}
+
+	if err = datastore.Get(c, key, goal); err != nil {
+		return err
+	}
 
 	return err
 }
