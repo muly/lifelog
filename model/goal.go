@@ -12,22 +12,26 @@ import (
 //TODO: need to add json tags for column names and to ignore blank fields
 type (
 	Goal struct {
-		Name        string
-		Notes       string
-		createdDate time.Time
+		Name       string
+		Notes      string
+		CreatedOn  time.Time
+		ModifiedOn time.Time
 	}
 	Goals []Goal
 )
 
-func (goal *Goal) Post(c context.Context) error {
+func (goal *Goal) Put(c context.Context) error {
 
+	// generate the key
 	key := datastore.NewKey(c, "Goal", util.StringKey(goal.Name), 0, nil)
 
-	_, err := datastore.Put(c, key, goal)
+	// put the record into the database and capture the key
+	key, err := datastore.Put(c, key, goal)
 	if err != nil {
 		return err
 	}
 
+	// read from database into the same variable
 	if err = datastore.Get(c, key, goal); err != nil {
 		return err
 	}
@@ -59,12 +63,8 @@ func (goal *Goal) Delete(c context.Context) (err error) {
 	return
 }
 
-func (a *Goal) SetDefaults() {
-	a.createdDate = time.Now()
-}
-
-// TODO:
 func (goals *Goals) Get(c context.Context) (err error) {
+	_, err = datastore.NewQuery("Goal").GetAll(c, goals)
 
 	return
 }

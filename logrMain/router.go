@@ -33,9 +33,9 @@ func init() {
 
 	//// goal
 	r.HandleFunc("/goal", ctrl.HandleGoalPost).Methods("POST")
-	r.HandleFunc("/goal/{goalid}", ctrl.HandleGoalGet).Methods("GET")
-	r.HandleFunc("/goal/{goalid}", ctrl.HandleGoalPut).Methods("PUT")
-	r.HandleFunc("/goal/{goalid}", ctrl.HandleGoalDelete).Methods("DELETE")
+	r.HandleFunc("/goal/{goal}", ctrl.HandleGoalGet).Methods("GET")
+	r.HandleFunc("/goal/{goal}", ctrl.HandleGoalPut).Methods("PUT")
+	r.HandleFunc("/goal/{goal}", ctrl.HandleGoalDelete).Methods("DELETE")
 	r.HandleFunc("/goal", ctrl.HandleGoalsGet).Methods("GET")
 	// TODO: goal search. need to
 
