@@ -7,6 +7,17 @@ import (
 	"google.golang.org/appengine/datastore"
 )
 
+type Activity struct {
+	Name        string
+	GoalID      string
+	CreatedDate time.Time
+	ModifiedOn  time.Time `json:"ModifiedOn,omitempty"`
+}
+
+func (a *ActivityLog) SetDefaults() {
+	a.CreatedDate = time.Now()
+}
+
 func ActivityLogPost(c context.Context, activityLog *types.ActivityLog) error {
 	// generate new key
 	key := datastore.NewIncompleteKey(c, "ActivityLog", nil)
