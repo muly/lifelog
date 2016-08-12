@@ -6,7 +6,7 @@ import (
 	"net/http"
 
 	"model"
-	"types"
+	//"types"
 
 	//"github.com/gorilla/mux"
 	"google.golang.org/appengine"
@@ -21,7 +21,7 @@ func HandleActivityLogPost(w http.ResponseWriter, r *http.Request) {
 	c := appengine.NewContext(r)
 
 	// read the json into struct //TODO: need to complete this
-	activityLog := types.ActivityLog{}
+	activityLog := model.ActivityLog{}
 
 	if err := json.NewDecoder(r.Body).Decode(&activityLog); err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)

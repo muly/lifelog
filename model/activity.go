@@ -1,10 +1,7 @@
 package model
 
 import (
-	"types"
-
-	"golang.org/x/net/context"
-	"google.golang.org/appengine/datastore"
+	"time"
 )
 
 type Activity struct {
@@ -12,19 +9,6 @@ type Activity struct {
 	GoalID      string
 	CreatedDate time.Time
 	ModifiedOn  time.Time `json:"ModifiedOn,omitempty"`
-}
-
-func (a *ActivityLog) SetDefaults() {
-	a.CreatedDate = time.Now()
-}
-
-func ActivityLogPost(c context.Context, activityLog *types.ActivityLog) error {
-	// generate new key
-	key := datastore.NewIncompleteKey(c, "ActivityLog", nil)
-	//store in database
-	_, err := datastore.Put(c, key, activityLog)
-
-	return err
 }
 
 /*
