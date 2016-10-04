@@ -21,6 +21,8 @@ func init() {
 	r.HandleFunc("/activitylog/{activitylogid}", ctrl.HandleActivityLogPut).Methods("PUT")
 	// activity log: delete
 	r.HandleFunc("/activitylog/{activitylogid}", ctrl.HandleActivityLogDelete).Methods("DELETE")
+	// activity log: search
+	r.HandleFunc("/activitylog/{activitylogid}", ctrl.HandleActivityLogGet).Methods("GET")
 
 	////
 	// activity: add
