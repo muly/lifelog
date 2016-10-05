@@ -3,9 +3,9 @@ package ctrl
 import (
 	"encoding/json"
 	"fmt"
-	"net/http"
-
 	"model"
+	"net/http"
+	"net/url"
 	//"types"
 
 	"github.com/gorilla/mux"
@@ -15,11 +15,15 @@ import (
 )
 
 func HandleActivityLogGet(w http.ResponseWriter, r *http.Request) {
-
+	q, err := url.ParseQuery(r.URL.RawQuery)
+	if err != nil {
+		w.Write([]byte(err.Error()))
+		return
+	}
 	c := appengine.NewContext(r)
 	al := StructActivityLog{}
-	p := mux.Vars(r)
-	al.Name = p["activitylogid"]
+	//p := mux.Vars(r)
+	al.Name = q["Name"][0]
 	//fmt.Printf(al.Name)
 
 	// generate key
