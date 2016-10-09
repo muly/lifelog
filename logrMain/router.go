@@ -30,9 +30,10 @@ func init() {
 	r.HandleFunc("/activity", ctrl.HandleActivityPost).Methods("POST")
 	r.HandleFunc("/activity/{activityid}", ctrl.HandleActivityPut).Methods("PUT")
 	// activity: delete
-	r.HandleFunc("/activity", ctrl.HandleActivityDelete).Methods("DELETE")
+	r.HandleFunc("/activity/{activity}", ctrl.HandleActivityDelete).Methods("DELETE")
 	// activity: search
-	r.HandleFunc("/activity", ctrl.HandleActivityGet).Methods("GET")
+	r.HandleFunc("/activity", ctrl.HandleActivitysGet).Methods("GET")
+	r.HandleFunc("/activity/{activityid}", ctrl.HandleActivityGet).Methods("GET")
 
 	//// goal
 	r.HandleFunc("/goal", ctrl.HandleGoalPost).Methods("POST")
