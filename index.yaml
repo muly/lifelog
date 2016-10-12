@@ -10,15 +10,7 @@ indexes:
 # automatically uploaded to the admin console when you next deploy
 # your application using appcfg.py.
 
-- kind: activityRecord
-  ancestor: yes
+- kind: Goal
   properties:
-  - name: Status
-  - name: TimeStamp
-    direction: desc
-
-- kind: activityRecord
-  ancestor: yes
-  properties:
-  - name: TimeStamp
-    direction: desc
+  - name: Notes
+  - name: Name
