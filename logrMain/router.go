@@ -1,12 +1,11 @@
 package logrMain
 
 import (
-	"fmt"
-	"net/http"
+	"github.com/gorilla/mux"
 
 	"ctrl"
-
-	"github.com/gorilla/mux"
+	"fmt"
+	"net/http"
 )
 
 func init() {
@@ -21,15 +20,19 @@ func init() {
 	r.HandleFunc("/activitylog/{activitylogid}", ctrl.HandleActivityLogPut).Methods("PUT")
 	// activity log: delete
 	r.HandleFunc("/activitylog/{activitylogid}", ctrl.HandleActivityLogDelete).Methods("DELETE")
+	// activity log: search
+	r.HandleFunc("/activitylog", ctrl.HandleActivityLogsGet).Methods("GET")
+	r.HandleFunc("/activitylog/{activitylogid}", ctrl.HandleActivityLogGet).Methods("GET")
 
 	////
 	// activity: add
 	r.HandleFunc("/activity", ctrl.HandleActivityPost).Methods("POST")
 	r.HandleFunc("/activity/{activityid}", ctrl.HandleActivityPut).Methods("PUT")
 	// activity: delete
-	r.HandleFunc("/activity", ctrl.HandleActivityDelete).Methods("DELETE")
+	r.HandleFunc("/activity/{activityid}", ctrl.HandleActivityDelete).Methods("DELETE")
 	// activity: search
-	r.HandleFunc("/activity", ctrl.HandleActivityGet).Methods("GET")
+	r.HandleFunc("/activity", ctrl.HandleActivitiesGet).Methods("GET")
+	r.HandleFunc("/activity/{activityid}", ctrl.HandleActivityGet).Methods("GET")
 
 	//// goal
 	r.HandleFunc("/goal", ctrl.HandleGoalPost).Methods("POST")

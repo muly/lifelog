@@ -90,6 +90,8 @@ func HandleGoalPut(w http.ResponseWriter, r *http.Request) {
 	// update
 	if err := goal.Put(c); err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
+		//w.WriteHeader(http.StatusInternalServerError)
+		//w.Write([]byte(err.Error()))
 		return
 	}
 
