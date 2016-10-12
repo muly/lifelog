@@ -3,7 +3,9 @@ package model
 import (
 	"golang.org/x/net/context"
 	"google.golang.org/appengine/datastore"
+
 	"time"
+
 	"types"
 	"util"
 )
@@ -11,10 +13,10 @@ import (
 //TODO: need to add json tags for column names and to ignore blank fields
 type (
 	ActivityLog struct {
-		Name      string
-		Notes     string `json:"Notes,omitempty"`
-		StartTime string //time.Time
-		//EndTime     time.Time
+		Name       string
+		Notes      string `json:"Notes,omitempty"`
+		StartTime  time.Time
+		EndTime    time.Time
 		CreatedOn  time.Time `json:"CreatedOn,omitempty"`
 		ModifiedOn time.Time `json:"ModifiedOn,omitempty"`
 	}

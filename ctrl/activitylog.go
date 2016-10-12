@@ -2,18 +2,15 @@ package ctrl
 
 import (
 	"encoding/json"
-	//"fmt"
-	"model"
-	"net/http"
-	//"net/url"
-	"time"
-	"types"
-	"util"
-
 	"github.com/gorilla/mux"
 	"google.golang.org/appengine"
-	//"google.golang.org/appengine/log"
-	//"google.golang.org/appengine/datastore"
+
+	"model"
+	"net/http"
+	"time"
+
+	"types"
+	"util"
 )
 
 func HandleActivityLogPost(w http.ResponseWriter, r *http.Request) {
