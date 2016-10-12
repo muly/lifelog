@@ -10,7 +10,6 @@ import (
 	"google.golang.org/appengine/datastore"
 )
 
-//TODO: need to add json tags for column names and to ignore blank fields
 type (
 	Goal struct {
 		Name       string
@@ -69,11 +68,26 @@ func (goal *Goal) Delete(c context.Context) (err error) {
 	return
 }
 
-// Get gets all the goal records
+// Get gets all the goal records matching the given criteria.
+// Fields on which query supported are Name, Notes
 //
-// TODO: need to implement the pagination
-func (goals *Goals) Get(c context.Context) (err error) {
-	_, err = datastore.NewQuery("Goal").GetAll(c, goals)
+func (goals *Goals) Get(c context.Context, filter Goal, offset int, limit int) (err error) {
+	q := datastore.NewQuery("Goal")
+
+	if filter.Name != "" {
+		q = q.Filter("Name =", filter.Name)
+	}
+
+	if filter.Notes != "" {
+		q = q.Filter("Notes =", filter.Notes)
+	}
+
+	q = q.Offset(offset).Limit(limit).Order("Name")
+
+	_, err = q.GetAll(c, goals)
+	if err != nil {
+		return
+	}
 
 	return
 }
