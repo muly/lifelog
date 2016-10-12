@@ -4,6 +4,8 @@ import (
 	"encoding/json"
 	//"fmt"
 	"net/http"
+	"net/url"
+	"strconv"
 	"time"
 
 	"model"
@@ -163,8 +165,40 @@ func HandleGoalDelete(w http.ResponseWriter, r *http.Request) {
 func HandleGoalsGet(w http.ResponseWriter, r *http.Request) {
 	c := appengine.NewContext(r)
 
+	vars, err := url.ParseQuery(r.URL.RawQuery)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusBadRequest)
+	}
+
 	goals := model.Goals{}
-	if err := goals.Get(c); err != nil {
+	goalFilter := model.Goal{}
+
+	if val, exists := vars["name"]; exists {
+		goalFilter.Name = val[0]
+
+	}
+	if val, exists := vars["notes"]; exists {
+		goalFilter.Notes = val[0]
+	}
+
+	var limit, offset int
+
+	if val, exists := vars["pagesize"]; exists {
+		if limit, err = strconv.Atoi(val[0]); err != nil {
+			http.Error(w, "pagesize should be a number. "+err.Error(), http.StatusBadRequest)
+		}
+	} else {
+		limit = types.PageSize
+	}
+
+	if val, exists := vars["page"]; exists {
+		if offset, err = strconv.Atoi(val[0]); err != nil {
+			http.Error(w, "page should be a number. "+err.Error(), http.StatusBadRequest)
+		}
+		offset = (offset - 1) * limit
+	}
+
+	if err := goals.Get(c, goalFilter, offset, limit); err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 	}
 
