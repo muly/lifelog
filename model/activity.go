@@ -3,7 +3,9 @@ package model
 import (
 	"golang.org/x/net/context"
 	"google.golang.org/appengine/datastore"
+
 	"time"
+
 	"types"
 	"util"
 )
@@ -11,12 +13,12 @@ import (
 //TODO: need to add json tags for column names and to ignore blank fields
 type (
 	Activity struct {
-		Name        string
-		GoalID      string
-		CreatedDate time.Time `json:"CreatedOn,omitempty"`
-		ModifiedOn  time.Time `json:"ModifiedOn,omitempty"`
+		Name       string
+		GoalID     string
+		CreatedOn  time.Time `json:"CreatedOn,omitempty"`
+		ModifiedOn time.Time `json:"ModifiedOn,omitempty"`
 	}
-	Activitys []Activity
+	Activities []Activity
 )
 
 // Get
@@ -52,7 +54,7 @@ func (act *Activity) Put(c context.Context) (err error) {
 
 // Get(s)
 
-func (acts *Activitys) Get(c context.Context) (err error) {
+func (acts *Activities) Get(c context.Context) (err error) {
 	_, err = datastore.NewQuery("Activity").GetAll(c, acts)
 
 	return
@@ -73,5 +75,5 @@ func (act *Activity) Delete(c context.Context) (err error) {
 }
 
 func (a *Activity) SetDefaults() {
-	a.CreatedDate = time.Now()
+	a.CreatedOn = time.Now()
 }

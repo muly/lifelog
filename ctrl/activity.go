@@ -2,18 +2,15 @@ package ctrl
 
 import (
 	"encoding/json"
-	//"fmt"
-	"model"
-	"net/http"
-	//"net/url"
-	"time"
-	"types"
-	"util"
-
 	"github.com/gorilla/mux"
 	"google.golang.org/appengine"
-	//"google.golang.org/appengine/log"
-	//"google.golang.org/appengine/datastore"
+
+	"model"
+	"net/http"
+	"time"
+
+	"types"
+	"util"
 )
 
 func HandleActivityPost(w http.ResponseWriter, r *http.Request) {
@@ -38,7 +35,7 @@ func HandleActivityPost(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	act.CreatedDate = time.Now() //SetDefaults()
+	act.CreatedOn = time.Now() //SetDefaults()
 
 	if err := act.Put(c); err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
@@ -126,10 +123,10 @@ func HandleActivityGet(w http.ResponseWriter, r *http.Request) {
 
 }
 
-func HandleActivitysGet(w http.ResponseWriter, r *http.Request) {
+func HandleActivitiesGet(w http.ResponseWriter, r *http.Request) {
 	c := appengine.NewContext(r)
 
-	acts := model.Activitys{}
+	acts := model.Activities{}
 	if err := acts.Get(c); err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 	}

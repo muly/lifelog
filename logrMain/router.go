@@ -1,12 +1,11 @@
 package logrMain
 
 import (
-	"fmt"
-	"net/http"
+	"github.com/gorilla/mux"
 
 	"ctrl"
-
-	"github.com/gorilla/mux"
+	"fmt"
+	"net/http"
 )
 
 func init() {
@@ -30,9 +29,9 @@ func init() {
 	r.HandleFunc("/activity", ctrl.HandleActivityPost).Methods("POST")
 	r.HandleFunc("/activity/{activityid}", ctrl.HandleActivityPut).Methods("PUT")
 	// activity: delete
-	r.HandleFunc("/activity/{activity}", ctrl.HandleActivityDelete).Methods("DELETE")
+	r.HandleFunc("/activity/{activityid}", ctrl.HandleActivityDelete).Methods("DELETE")
 	// activity: search
-	r.HandleFunc("/activity", ctrl.HandleActivitysGet).Methods("GET")
+	r.HandleFunc("/activity", ctrl.HandleActivitiesGet).Methods("GET")
 	r.HandleFunc("/activity/{activityid}", ctrl.HandleActivityGet).Methods("GET")
 
 	//// goal
