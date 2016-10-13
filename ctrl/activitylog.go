@@ -7,6 +7,8 @@ import (
 
 	"model"
 	"net/http"
+	"net/url"
+	"strconv"
 	"time"
 
 	"types"
@@ -124,10 +126,43 @@ func HandleActivityLogGet(w http.ResponseWriter, r *http.Request) {
 }
 
 func HandleActivityLogsGet(w http.ResponseWriter, r *http.Request) {
+
 	c := appengine.NewContext(r)
 
+	vars, err := url.ParseQuery(r.URL.RawQuery)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusBadRequest)
+	}
+
 	als := model.ActivityLogs{}
-	if err := als.Get(c); err != nil {
+	alFilter := model.ActivityLog{}
+
+	if val, exists := vars["name"]; exists {
+		alFilter.Name = val[0]
+
+	}
+	if val, exists := vars["notes"]; exists {
+		alFilter.Notes = val[0]
+	}
+
+	var limit, offset int
+
+	if val, exists := vars["pagesize"]; exists {
+		if limit, err = strconv.Atoi(val[0]); err != nil {
+			http.Error(w, "pagesize should be a number. "+err.Error(), http.StatusBadRequest)
+		}
+	} else {
+		limit = types.PageSize
+	}
+
+	if val, exists := vars["page"]; exists {
+		if offset, err = strconv.Atoi(val[0]); err != nil {
+			http.Error(w, "page should be a number. "+err.Error(), http.StatusBadRequest)
+		}
+		offset = (offset - 1) * limit
+	}
+
+	if err := als.Get(c, alFilter, offset, limit); err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 	}
 
@@ -135,6 +170,7 @@ func HandleActivityLogsGet(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
+
 }
 func HandleActivityLogDelete(w http.ResponseWriter, r *http.Request) {
 	c := appengine.NewContext(r)

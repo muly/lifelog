@@ -55,8 +55,23 @@ func (al *ActivityLog) Put(c context.Context) error {
 
 // Get(s)
 
-func (als *ActivityLogs) Get(c context.Context) (err error) {
-	_, err = datastore.NewQuery("ActivityLog").GetAll(c, als)
+func (als *ActivityLogs) Get(c context.Context, filter ActivityLog, offset int, limit int) (err error) {
+	q := datastore.NewQuery("ActivityLog")
+
+	if filter.Name != "" {
+		q = q.Filter("Name =", filter.Name)
+	}
+
+	if filter.Notes != "" {
+		q = q.Filter("Notes =", filter.Notes)
+	}
+
+	q = q.Offset(offset).Limit(limit).Order("Name")
+
+	_, err = q.GetAll(c, als)
+	if err != nil {
+		return
+	}
 
 	return
 }
