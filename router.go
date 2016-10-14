@@ -1,17 +1,30 @@
-package logrMain
+package lifelog
 
 import (
-	"github.com/gorilla/mux"
-
-	"ctrl"
 	"fmt"
 	"net/http"
+
+	"ctrl"
+
+	"github.com/gorilla/mux"
 )
 
 func init() {
 
+	r := Handlers()
+
+	http.Handle("/", r)
+}
+
+func handler(w http.ResponseWriter, r *http.Request) {
+	fmt.Fprint(w, "Hello, world! 123")
+
+}
+
+func Handlers() *mux.Router {
+
 	r := mux.NewRouter()
-	r.HandleFunc("/", handler).Methods("GET")
+	//r.HandleFunc("/", handler).Methods("GET")
 
 	////
 	// activity log: add
@@ -40,12 +53,7 @@ func init() {
 	r.HandleFunc("/goal/{goal}", ctrl.HandleGoalPut).Methods("PUT")
 	r.HandleFunc("/goal/{goal}", ctrl.HandleGoalDelete).Methods("DELETE")
 	r.HandleFunc("/goal", ctrl.HandleGoalsGet).Methods("GET")
-	// TODO: goal search. need to
 
-	http.Handle("/", r)
-}
-
-func handler(w http.ResponseWriter, r *http.Request) {
-	fmt.Fprint(w, "Hello, world! 123")
+	return r
 
 }
