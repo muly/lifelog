@@ -54,8 +54,23 @@ func (act *Activity) Put(c context.Context) (err error) {
 
 // Get(s)
 
-func (acts *Activities) Get(c context.Context) (err error) {
-	_, err = datastore.NewQuery("Activity").GetAll(c, acts)
+func (acts *Activities) Get(c context.Context, filter Activity, offset int, limit int) (err error) {
+	q := datastore.NewQuery("Activity")
+
+	if filter.Name != "" {
+		q = q.Filter("Name =", filter.Name)
+	}
+
+	if filter.GoalID != "" {
+		q = q.Filter("GoalID =", filter.GoalID)
+	}
+
+	q = q.Offset(offset).Limit(limit).Order("Name")
+
+	_, err = q.GetAll(c, acts)
+	if err != nil {
+		return
+	}
 
 	return
 }
