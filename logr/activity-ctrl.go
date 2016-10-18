@@ -10,7 +10,7 @@ import (
 
 	//"model"
 	//"types"
-	"util"
+	"github.com/muly/lifelog/util"
 )
 
 func HandleActivityPost(w http.ResponseWriter, r *http.Request) {

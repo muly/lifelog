@@ -3,8 +3,8 @@ package logr
 import (
 	"time"
 
-	"types"
-	"util"
+	//"types"
+	"github.com/muly/lifelog/util"
 
 	"golang.org/x/net/context"
 	"google.golang.org/appengine/datastore"
@@ -47,7 +47,7 @@ func (goal *Goal) Get(c context.Context) (err error) {
 
 	err = datastore.Get(c, key, goal)
 	if err != nil && err.Error() == "datastore: no such entity" {
-		err = types.ErrorNoMatch
+		err = ErrorNoMatch
 	}
 
 	return
@@ -57,7 +57,7 @@ func (goal *Goal) Get(c context.Context) (err error) {
 //
 func (goal *Goal) Delete(c context.Context) (err error) {
 	// TODO: need to check for existance before deleting. if NOT exists, then throw ErrorNoMatch error (err = ErrorNoMatch)
-	if err = goal.Get(c); err == types.ErrorNoMatch {
+	if err = goal.Get(c); err == ErrorNoMatch {
 		return
 	}
 

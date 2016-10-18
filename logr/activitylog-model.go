@@ -6,8 +6,8 @@ import (
 
 	"time"
 
-	"types"
-	"util"
+	//"types"
+	"github.com/muly/lifelog/util"
 )
 
 //TODO: need to add json tags for column names and to ignore blank fields
@@ -29,7 +29,7 @@ func (al *ActivityLog) Get(c context.Context) (err error) {
 
 	err = datastore.Get(c, key, al)
 	if err != nil && err.Error() == "datastore: no such entity" {
-		err = types.ErrorNoMatch
+		err = ErrorNoMatch
 	}
 
 	return
@@ -64,7 +64,7 @@ func (als *ActivityLogs) Get(c context.Context) (err error) {
 // Delete
 func (al *ActivityLog) Delete(c context.Context) (err error) {
 	// TODO: need to check for existance before deleting. if NOT exists, then throw ErrorNoMatch error (err = ErrorNoMatch)
-	if err = al.Get(c); err == types.ErrorNoMatch {
+	if err = al.Get(c); err == ErrorNoMatch {
 		return
 	}
 

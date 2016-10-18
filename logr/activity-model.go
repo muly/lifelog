@@ -7,7 +7,7 @@ import (
 	"time"
 
 	//"types"
-	"util"
+	"github.com/muly/lifelog/util"
 )
 
 //TODO: need to add json tags for column names and to ignore blank fields

@@ -10,7 +10,7 @@ import (
 
 	//"model"
 	//"types"
-	"util"
+	"github.com/muly/lifelog/util"
 )
 
 func HandleActivityLogPost(w http.ResponseWriter, r *http.Request) {
@@ -25,7 +25,7 @@ func HandleActivityLogPost(w http.ResponseWriter, r *http.Request) {
 	//  if record already exists with the same Activity name, then return
 	alSrc := ActivityLog{}
 	alSrc.Name = al.Name
-	if err := alSrc.Get(c); err == types.ErrorNoMatch {
+	if err := alSrc.Get(c); err == ErrorNoMatch {
 		// do nothing
 	} else if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
@@ -64,7 +64,7 @@ func HandleActivityLogPut(w http.ResponseWriter, r *http.Request) {
 	// if the goal name (string key) provided in the URI doesn't exist in database, then return
 	alsrc := ActivityLog{}
 	alsrc.Name = params["activitylogid"]
-	if err := alsrc.Get(c); err == types.ErrorNoMatch {
+	if err := alsrc.Get(c); err == ErrorNoMatch {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
 	} else if err != nil {
@@ -106,7 +106,7 @@ func HandleActivityLogGet(w http.ResponseWriter, r *http.Request) {
 	al.Name = params["activitylogid"]
 
 	// if given goal is not found, return appropriate error
-	if err := al.Get(c); err == types.ErrorNoMatch {
+	if err := al.Get(c); err == ErrorNoMatch {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
 	} else if err != nil {
@@ -145,7 +145,7 @@ func HandleActivityLogDelete(w http.ResponseWriter, r *http.Request) {
 	al.Name = params["activitylogid"]
 
 	err := al.Delete(c)
-	if err == types.ErrorNoMatch {
+	if err == ErrorNoMatch {
 		http.Error(w, err.Error(), http.StatusOK)
 		return
 	} else if err != nil {
