@@ -1,4 +1,4 @@
-package ctrl
+package logr
 
 import (
 	"encoding/json"

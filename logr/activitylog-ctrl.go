@@ -1,4 +1,4 @@
-package ctrl
+package logr
 
 import (
 	"encoding/json"
@@ -8,14 +8,14 @@ import (
 	"net/http"
 	"time"
 
-	"model"
-	"types"
+	//"model"
+	//"types"
 	"util"
 )
 
 func HandleActivityLogPost(w http.ResponseWriter, r *http.Request) {
 	c := appengine.NewContext(r)
-	al := model.ActivityLog{}
+	al := ActivityLog{}
 
 	if err := json.NewDecoder(r.Body).Decode(&al); err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)
@@ -23,7 +23,7 @@ func HandleActivityLogPost(w http.ResponseWriter, r *http.Request) {
 	}
 
 	//  if record already exists with the same Activity name, then return
-	alSrc := model.ActivityLog{}
+	alSrc := ActivityLog{}
 	alSrc.Name = al.Name
 	if err := alSrc.Get(c); err == types.ErrorNoMatch {
 		// do nothing
@@ -52,7 +52,7 @@ func HandleActivityLogPost(w http.ResponseWriter, r *http.Request) {
 
 func HandleActivityLogPut(w http.ResponseWriter, r *http.Request) {
 	c := appengine.NewContext(r)
-	al := model.ActivityLog{}
+	al := ActivityLog{}
 
 	if err := json.NewDecoder(r.Body).Decode(&al); err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)
@@ -62,7 +62,7 @@ func HandleActivityLogPut(w http.ResponseWriter, r *http.Request) {
 	params := mux.Vars(r)
 
 	// if the goal name (string key) provided in the URI doesn't exist in database, then return
-	alsrc := model.ActivityLog{}
+	alsrc := ActivityLog{}
 	alsrc.Name = params["activitylogid"]
 	if err := alsrc.Get(c); err == types.ErrorNoMatch {
 		http.Error(w, err.Error(), http.StatusBadRequest)
@@ -102,7 +102,7 @@ func HandleActivityLogGet(w http.ResponseWriter, r *http.Request) {
 
 	params := mux.Vars(r)
 
-	al := model.ActivityLog{}
+	al := ActivityLog{}
 	al.Name = params["activitylogid"]
 
 	// if given goal is not found, return appropriate error
@@ -126,7 +126,7 @@ func HandleActivityLogGet(w http.ResponseWriter, r *http.Request) {
 func HandleActivityLogsGet(w http.ResponseWriter, r *http.Request) {
 	c := appengine.NewContext(r)
 
-	als := model.ActivityLogs{}
+	als := ActivityLogs{}
 	if err := als.Get(c); err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 	}
@@ -140,7 +140,7 @@ func HandleActivityLogDelete(w http.ResponseWriter, r *http.Request) {
 	c := appengine.NewContext(r)
 
 	params := mux.Vars(r)
-	al := model.ActivityLog{}
+	al := ActivityLog{}
 
 	al.Name = params["activitylogid"]
 

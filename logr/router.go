@@ -1,4 +1,4 @@
-package lifelog
+package logr
 
 import (
 	"fmt"

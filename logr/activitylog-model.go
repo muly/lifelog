@@ -1,4 +1,4 @@
-package model
+package logr
 
 import (
 	"golang.org/x/net/context"

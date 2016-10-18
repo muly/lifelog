@@ -1,4 +1,4 @@
-package model
+package logr
 
 import (
 	"golang.org/x/net/context"
@@ -6,7 +6,7 @@ import (
 
 	"time"
 
-	"types"
+	//"types"
 	"util"
 )
 
@@ -27,7 +27,7 @@ func (act *Activity) Get(c context.Context) (err error) {
 
 	err = datastore.Get(c, key, act)
 	if err != nil && err.Error() == "datastore: no such entity" {
-		err = types.ErrorNoMatch
+		err = ErrorNoMatch
 	}
 
 	return
@@ -63,7 +63,7 @@ func (acts *Activities) Get(c context.Context) (err error) {
 // Delete
 func (act *Activity) Delete(c context.Context) (err error) {
 	// TODO: need to check for existance before deleting. if NOT exists, then throw ErrorNoMatch error (err = ErrorNoMatch)
-	if err = act.Get(c); err == types.ErrorNoMatch {
+	if err = act.Get(c); err == ErrorNoMatch {
 		return
 	}
 

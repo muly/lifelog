@@ -1,4 +1,4 @@
-package ctrl
+package logr
 
 import (
 	"encoding/json"
@@ -8,14 +8,14 @@ import (
 	"net/http"
 	"time"
 
-	"model"
-	"types"
+	//"model"
+	//"types"
 	"util"
 )
 
 func HandleActivityPost(w http.ResponseWriter, r *http.Request) {
 	c := appengine.NewContext(r)
-	act := model.Activity{}
+	act := Activity{}
 
 	if err := json.NewDecoder(r.Body).Decode(&act); err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)
@@ -23,9 +23,9 @@ func HandleActivityPost(w http.ResponseWriter, r *http.Request) {
 	}
 
 	//  if record already exists with the same Activity name, then return
-	actSrc := model.Activity{}
+	actSrc := Activity{}
 	actSrc.Name = act.Name
-	if err := actSrc.Get(c); err == types.ErrorNoMatch {
+	if err := actSrc.Get(c); err == ErrorNoMatch {
 		// do nothing
 	} else if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
@@ -52,7 +52,7 @@ func HandleActivityPost(w http.ResponseWriter, r *http.Request) {
 
 func HandleActivityPut(w http.ResponseWriter, r *http.Request) {
 	c := appengine.NewContext(r)
-	act := model.Activity{}
+	act := Activity{}
 
 	if err := json.NewDecoder(r.Body).Decode(&act); err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)
@@ -62,9 +62,9 @@ func HandleActivityPut(w http.ResponseWriter, r *http.Request) {
 	params := mux.Vars(r)
 
 	// if the goal name (string key) provided in the URI doesn't exist in database, then return
-	actsrc := model.Activity{}
+	actsrc := Activity{}
 	actsrc.Name = params["activityid"]
-	if err := actsrc.Get(c); err == types.ErrorNoMatch {
+	if err := actsrc.Get(c); err == ErrorNoMatch {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
 	} else if err != nil {
@@ -102,11 +102,11 @@ func HandleActivityGet(w http.ResponseWriter, r *http.Request) {
 
 	params := mux.Vars(r)
 
-	act := model.Activity{}
+	act := Activity{}
 	act.Name = params["activityid"]
 
 	// if given goal is not found, return appropriate error
-	if err := act.Get(c); err == types.ErrorNoMatch {
+	if err := act.Get(c); err == ErrorNoMatch {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
 	} else if err != nil {
@@ -126,7 +126,7 @@ func HandleActivityGet(w http.ResponseWriter, r *http.Request) {
 func HandleActivitiesGet(w http.ResponseWriter, r *http.Request) {
 	c := appengine.NewContext(r)
 
-	acts := model.Activities{}
+	acts := Activities{}
 	if err := acts.Get(c); err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 	}
@@ -140,12 +140,12 @@ func HandleActivityDelete(w http.ResponseWriter, r *http.Request) {
 	c := appengine.NewContext(r)
 
 	params := mux.Vars(r)
-	act := model.Activity{}
+	act := Activity{}
 
 	act.Name = params["activityid"]
 
 	err := act.Delete(c)
-	if err == types.ErrorNoMatch {
+	if err == ErrorNoMatch {
 		http.Error(w, err.Error(), http.StatusOK)
 		return
 	} else if err != nil {
