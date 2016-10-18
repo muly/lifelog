@@ -7,6 +7,8 @@ import (
 
 	"model"
 	"net/http"
+	"net/url"
+	"strconv"
 	"time"
 
 	"types"
@@ -126,12 +128,44 @@ func HandleActivityGet(w http.ResponseWriter, r *http.Request) {
 func HandleActivitiesGet(w http.ResponseWriter, r *http.Request) {
 	c := appengine.NewContext(r)
 
-	acts := model.Activities{}
-	if err := acts.Get(c); err != nil {
+	vars, err := url.ParseQuery(r.URL.RawQuery)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusBadRequest)
+	}
+
+	als := model.Activities{}
+	alFilter := model.Activity{}
+
+	if val, exists := vars["name"]; exists {
+		alFilter.Name = val[0]
+
+	}
+	if val, exists := vars["GoalID"]; exists {
+		alFilter.GoalID = val[0]
+	}
+
+	var limit, offset int
+
+	if val, exists := vars["pagesize"]; exists {
+		if limit, err = strconv.Atoi(val[0]); err != nil {
+			http.Error(w, "pagesize should be a number. "+err.Error(), http.StatusBadRequest)
+		}
+	} else {
+		limit = types.PageSize
+	}
+
+	if val, exists := vars["page"]; exists {
+		if offset, err = strconv.Atoi(val[0]); err != nil {
+			http.Error(w, "page should be a number. "+err.Error(), http.StatusBadRequest)
+		}
+		offset = (offset - 1) * limit
+	}
+
+	if err := als.Get(c, alFilter, offset, limit); err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 	}
 
-	if err := json.NewEncoder(w).Encode(acts); err != nil {
+	if err := json.NewEncoder(w).Encode(als); err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
