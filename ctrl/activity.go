@@ -43,13 +43,14 @@ func HandleActivityPost(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(http.StatusCreated)
 
 	if err := json.NewEncoder(w).Encode(act); err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
 
-	w.WriteHeader(http.StatusCreated)
 }
 
 func HandleActivityPut(w http.ResponseWriter, r *http.Request) {
@@ -65,7 +66,7 @@ func HandleActivityPut(w http.ResponseWriter, r *http.Request) {
 
 	// if the goal name (string key) provided in the URI doesn't exist in database, then return
 	actsrc := model.Activity{}
-	actsrc.Name = params["activityid"]
+	actsrc.Name = params["id"]
 	if err := actsrc.Get(c); err == types.ErrorNoMatch {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
@@ -75,7 +76,7 @@ func HandleActivityPut(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// if goal name from body has a value other than the actual goal name in db; i.e if goal name is being changed, dont allow
-	if actsrc.Name != "" && util.StringKey(actsrc.Name) != params["activityid"] { // TODO: Bug: changing the goal name to its equivalent string key is permitted. need to troubleshoot and fix so that any change is not allowed.
+	if actsrc.Name != "" && util.StringKey(actsrc.Name) != params["id"] { // TODO: Bug: changing the goal name to its equivalent string key is permitted. need to troubleshoot and fix so that any change is not allowed.
 		http.Error(w, "cannot update key column - Activity Name", http.StatusBadRequest)
 		return
 	}
@@ -90,13 +91,14 @@ func HandleActivityPut(w http.ResponseWriter, r *http.Request) {
 		//w.Write([]byte(err.Error()))
 		return
 	}
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(http.StatusCreated)
 
 	if err := json.NewEncoder(w).Encode(act); err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
 
-	w.WriteHeader(http.StatusCreated)
 }
 
 func HandleActivityGet(w http.ResponseWriter, r *http.Request) {
@@ -105,7 +107,7 @@ func HandleActivityGet(w http.ResponseWriter, r *http.Request) {
 	params := mux.Vars(r)
 
 	act := model.Activity{}
-	act.Name = params["activityid"]
+	act.Name = params["id"]
 
 	// if given goal is not found, return appropriate error
 	if err := act.Get(c); err == types.ErrorNoMatch {
@@ -115,6 +117,8 @@ func HandleActivityGet(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(http.StatusOK)
 
 	if err := json.NewEncoder(w).Encode(act); err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
@@ -164,6 +168,8 @@ func HandleActivitiesGet(w http.ResponseWriter, r *http.Request) {
 	if err := als.Get(c, alFilter, offset, limit); err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 	}
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(http.StatusOK)
 
 	if err := json.NewEncoder(w).Encode(als); err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
@@ -176,9 +182,10 @@ func HandleActivityDelete(w http.ResponseWriter, r *http.Request) {
 	params := mux.Vars(r)
 	act := model.Activity{}
 
-	act.Name = params["activityid"]
+	act.Name = params["id"]
 
 	err := act.Delete(c)
+
 	if err == types.ErrorNoMatch {
 		http.Error(w, err.Error(), http.StatusOK)
 		return
