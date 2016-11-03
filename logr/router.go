@@ -1,10 +1,7 @@
 package logr
 
 import (
-	"fmt"
 	"net/http"
-
-	//"ctrl"
 
 	"github.com/gorilla/mux"
 )
@@ -14,11 +11,6 @@ func init() {
 	r := Handlers()
 
 	http.Handle("/", r)
-}
-
-func handler(w http.ResponseWriter, r *http.Request) {
-	fmt.Fprint(w, "Hello, world! 123")
-
 }
 
 func Handlers() *mux.Router {

@@ -8,17 +8,25 @@ import (
 	"strconv"
 	"time"
 
-	//"model"
-	//"types"
 	"github.com/muly/lifelog/util"
 
+	gorillacontext "github.com/gorilla/context"
 	"github.com/gorilla/mux"
+	"golang.org/x/net/context"
 	"google.golang.org/appengine"
-	//"google.golang.org/appengine/log"
 )
 
 func HandleGoalPost(w http.ResponseWriter, r *http.Request) {
-	c := appengine.NewContext(r)
+	//c := appengine.NewContext(r)
+	//fmt.Println("###################### HandleGoalPost:", r.URL)
+	//c := appengine.NewContext(r)
+	var c context.Context
+	if val, ok := gorillacontext.GetOk(r, "Context"); ok {
+		c = val.(context.Context)
+	} else {
+		c = appengine.NewContext(r)
+	}
+
 	goal := Goal{}
 
 	if err := json.NewDecoder(r.Body).Decode(&goal); err != nil {
@@ -60,7 +68,15 @@ func HandleGoalPost(w http.ResponseWriter, r *http.Request) {
 // And pass the json body with all the fields of goal struct.
 // Pass all the fields. if a field is not changed, pass the unchanged value. Any missing fields will result in updating the database with the respective zero value, so Make sure you pass all the fields, even though the value is not changed.
 func HandleGoalPut(w http.ResponseWriter, r *http.Request) {
-	c := appengine.NewContext(r)
+	//fmt.Println("###################### HandleGoalPut:", r.URL)
+	//c := appengine.NewContext(r)
+	var c context.Context
+	if val, ok := gorillacontext.GetOk(r, "Context"); ok {
+		c = val.(context.Context)
+	} else {
+		c = appengine.NewContext(r)
+	}
+
 	goal := Goal{}
 
 	if err := json.NewDecoder(r.Body).Decode(&goal); err != nil {
@@ -105,7 +121,13 @@ func HandleGoalPut(w http.ResponseWriter, r *http.Request) {
 }
 
 func HandleGoalGet(w http.ResponseWriter, r *http.Request) {
-	c := appengine.NewContext(r)
+	//c := appengine.NewContext(r)
+	var c context.Context
+	if val, ok := gorillacontext.GetOk(r, "Context"); ok {
+		c = val.(context.Context)
+	} else {
+		c = appengine.NewContext(r)
+	}
 
 	params := mux.Vars(r)
 
