@@ -45,13 +45,14 @@ func HandleGoalPost(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(http.StatusCreated)
 
 	if err := json.NewEncoder(w).Encode(goal); err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
 
-	w.WriteHeader(http.StatusCreated)
 }
 
 // HandleGoalPut handles the PUT operation on the Goal entity type.
@@ -71,7 +72,7 @@ func HandleGoalPut(w http.ResponseWriter, r *http.Request) {
 
 	// if the goal name (string key) provided in the URI doesn't exist in database, then return
 	goalSrc := model.Goal{}
-	goalSrc.Name = params["goal"]
+	goalSrc.Name = params["id"]
 	if err := goalSrc.Get(c); err == types.ErrorNoMatch {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
@@ -81,7 +82,7 @@ func HandleGoalPut(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// if goal name from body has a value other than the actual goal name in db; i.e if goal name is being changed, dont allow
-	if goal.Name != "" && util.StringKey(goal.Name) != params["goal"] { // TODO: Bug: changing the goal name to its equivalent string key is permitted. need to troubleshoot and fix so that any change is not allowed.
+	if goal.Name != "" && util.StringKey(goal.Name) != params["id"] { // TODO: Bug: changing the goal name to its equivalent string key is permitted. need to troubleshoot and fix so that any change is not allowed.
 		http.Error(w, "cannot update key column - Goal Name", http.StatusBadRequest)
 		return
 	}
@@ -94,13 +95,14 @@ func HandleGoalPut(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(http.StatusCreated)
 
 	if err := json.NewEncoder(w).Encode(goal); err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
 
-	w.WriteHeader(http.StatusCreated)
 }
 
 func HandleGoalGet(w http.ResponseWriter, r *http.Request) {
@@ -108,7 +110,7 @@ func HandleGoalGet(w http.ResponseWriter, r *http.Request) {
 
 	params := mux.Vars(r)
 
-	goalName, exists := params["goal"]
+	goalName, exists := params["id"]
 	if !exists {
 		http.Error(w, "Goal parameter is missing in URI", http.StatusBadRequest)
 		return
@@ -125,6 +127,8 @@ func HandleGoalGet(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(http.StatusOK)
 
 	if err := json.NewEncoder(w).Encode(goal); err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
@@ -139,7 +143,7 @@ func HandleGoalDelete(w http.ResponseWriter, r *http.Request) {
 
 	params := mux.Vars(r)
 
-	goalName, exists := params["goal"]
+	goalName, exists := params["id"]
 	if !exists {
 		w.WriteHeader(http.StatusInternalServerError)
 		// add error notesmessage that "goal parameter is missing"
@@ -201,9 +205,12 @@ func HandleGoalsGet(w http.ResponseWriter, r *http.Request) {
 	if err := goals.Get(c, goalFilter, offset, limit); err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 	}
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(http.StatusOK)
 
 	if err := json.NewEncoder(w).Encode(goals); err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
+
 }
