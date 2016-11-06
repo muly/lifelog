@@ -1,33 +1,32 @@
-package ctrl
+package lifelog
 
 import (
 	"encoding/json"
 	"github.com/gorilla/mux"
 	"google.golang.org/appengine"
 
-	"model"
 	"net/http"
 	"net/url"
 	"strconv"
 	"time"
-
-	"types"
-	"util"
+	//"github.com/muly/lifelog/util"
+	//"model"
+	//"types"
 )
 
-func HandleActivityPost(w http.ResponseWriter, r *http.Request) {
+func HandleActivityLogPost(w http.ResponseWriter, r *http.Request) {
 	c := appengine.NewContext(r)
-	act := model.Activity{}
+	al := ActivityLog{}
 
-	if err := json.NewDecoder(r.Body).Decode(&act); err != nil {
+	if err := json.NewDecoder(r.Body).Decode(&al); err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
 	}
 
 	//  if record already exists with the same Activity name, then return
-	actSrc := model.Activity{}
-	actSrc.Name = act.Name
-	if err := actSrc.Get(c); err == types.ErrorNoMatch {
+	alSrc := ActivityLog{}
+	alSrc.Name = al.Name
+	if err := alSrc.Get(c); err == ErrorNoMatch {
 		// do nothing
 	} else if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
@@ -37,27 +36,27 @@ func HandleActivityPost(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	act.CreatedOn = time.Now() //SetDefaults()
+	al.CreatedOn = time.Now()
 
-	if err := act.Put(c); err != nil {
+	if err := al.Put(c); err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusCreated)
 
-	if err := json.NewEncoder(w).Encode(act); err != nil {
+	if err := json.NewEncoder(w).Encode(al); err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
 
 }
 
-func HandleActivityPut(w http.ResponseWriter, r *http.Request) {
+func HandleActivityLogPut(w http.ResponseWriter, r *http.Request) {
 	c := appengine.NewContext(r)
-	act := model.Activity{}
+	al := ActivityLog{}
 
-	if err := json.NewDecoder(r.Body).Decode(&act); err != nil {
+	if err := json.NewDecoder(r.Body).Decode(&al); err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
 	}
@@ -65,9 +64,9 @@ func HandleActivityPut(w http.ResponseWriter, r *http.Request) {
 	params := mux.Vars(r)
 
 	// if the goal name (string key) provided in the URI doesn't exist in database, then return
-	actsrc := model.Activity{}
-	actsrc.Name = params["id"]
-	if err := actsrc.Get(c); err == types.ErrorNoMatch {
+	alsrc := ActivityLog{}
+	alsrc.Name = params["id"]
+	if err := alsrc.Get(c); err == ErrorNoMatch {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
 	} else if err != nil {
@@ -76,16 +75,16 @@ func HandleActivityPut(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// if goal name from body has a value other than the actual goal name in db; i.e if goal name is being changed, dont allow
-	if actsrc.Name != "" && util.StringKey(actsrc.Name) != params["id"] { // TODO: Bug: changing the goal name to its equivalent string key is permitted. need to troubleshoot and fix so that any change is not allowed.
-		http.Error(w, "cannot update key column - Activity Name", http.StatusBadRequest)
+	if alsrc.Name != "" && StringKey(alsrc.Name) != params["id"] { // TODO: Bug: changing the goal name to its equivalent string key is permitted. need to troubleshoot and fix so that any change is not allowed.
+		http.Error(w, "cannot update key column - ActivityLog Name", http.StatusBadRequest)
 		return
 	}
 
 	//
-	act.ModifiedOn = time.Now() //SetDefaults()
+	al.ModifiedOn = time.Now()
 
 	// update
-	if err := act.Put(c); err != nil {
+	if err := al.Put(c); err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		//w.WriteHeader(http.StatusInternalServerError)
 		//w.Write([]byte(err.Error()))
@@ -94,23 +93,23 @@ func HandleActivityPut(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusCreated)
 
-	if err := json.NewEncoder(w).Encode(act); err != nil {
+	if err := json.NewEncoder(w).Encode(al); err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
 
 }
 
-func HandleActivityGet(w http.ResponseWriter, r *http.Request) {
+func HandleActivityLogGet(w http.ResponseWriter, r *http.Request) {
 	c := appengine.NewContext(r)
 
 	params := mux.Vars(r)
 
-	act := model.Activity{}
-	act.Name = params["id"]
+	al := ActivityLog{}
+	al.Name = params["id"]
 
 	// if given goal is not found, return appropriate error
-	if err := act.Get(c); err == types.ErrorNoMatch {
+	if err := al.Get(c); err == ErrorNoMatch {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
 	} else if err != nil {
@@ -120,7 +119,7 @@ func HandleActivityGet(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusOK)
 
-	if err := json.NewEncoder(w).Encode(act); err != nil {
+	if err := json.NewEncoder(w).Encode(al); err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
@@ -129,7 +128,8 @@ func HandleActivityGet(w http.ResponseWriter, r *http.Request) {
 
 }
 
-func HandleActivitiesGet(w http.ResponseWriter, r *http.Request) {
+func HandleActivityLogsGet(w http.ResponseWriter, r *http.Request) {
+
 	c := appengine.NewContext(r)
 
 	vars, err := url.ParseQuery(r.URL.RawQuery)
@@ -137,15 +137,15 @@ func HandleActivitiesGet(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 	}
 
-	als := model.Activities{}
-	alFilter := model.Activity{}
+	als := ActivityLogs{}
+	alFilter := ActivityLog{}
 
 	if val, exists := vars["name"]; exists {
 		alFilter.Name = val[0]
 
 	}
-	if val, exists := vars["GoalID"]; exists {
-		alFilter.GoalID = val[0]
+	if val, exists := vars["notes"]; exists {
+		alFilter.Notes = val[0]
 	}
 
 	var limit, offset int
@@ -155,7 +155,7 @@ func HandleActivitiesGet(w http.ResponseWriter, r *http.Request) {
 			http.Error(w, "pagesize should be a number. "+err.Error(), http.StatusBadRequest)
 		}
 	} else {
-		limit = types.PageSize
+		limit = PageSize
 	}
 
 	if val, exists := vars["page"]; exists {
@@ -175,18 +175,18 @@ func HandleActivitiesGet(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
+
 }
-func HandleActivityDelete(w http.ResponseWriter, r *http.Request) {
+func HandleActivityLogDelete(w http.ResponseWriter, r *http.Request) {
 	c := appengine.NewContext(r)
 
 	params := mux.Vars(r)
-	act := model.Activity{}
+	al := ActivityLog{}
 
-	act.Name = params["id"]
+	al.Name = params["id"]
 
-	err := act.Delete(c)
-
-	if err == types.ErrorNoMatch {
+	err := al.Delete(c)
+	if err == ErrorNoMatch {
 		http.Error(w, err.Error(), http.StatusOK)
 		return
 	} else if err != nil {
