@@ -16,6 +16,13 @@ var PageSize = 10 // default page size
 
 func init() {
 
+	r := Handlers()
+
+	http.Handle("/", r)
+}
+
+func Handlers() *mux.Router {
+
 	r := mux.NewRouter()
 	//r.HandleFunc("/", handler).Methods("GET")
 
@@ -46,9 +53,9 @@ func init() {
 	r.HandleFunc("/goal/{id}", HandleGoalPut).Methods("PUT")
 	r.HandleFunc("/goal/{id}", HandleGoalDelete).Methods("DELETE")
 	r.HandleFunc("/goal", HandleGoalsGet).Methods("GET")
-	// TODO: goal search. need to
 
-	http.Handle("/", r)
+	return r
+
 }
 
 /*func handler(w http.ResponseWriter, r *http.Request) {
