@@ -2,21 +2,26 @@ package lifelog
 
 import (
 	"encoding/json"
-	//"model"
 	"net/http"
 	"net/url"
 	"strconv"
 	"time"
 
-	//"types"
-	//"github.com/muly/lifelog/util"
-
+	gorillacontext "github.com/gorilla/context"
 	"github.com/gorilla/mux"
+	"golang.org/x/net/context"
 	"google.golang.org/appengine"
 )
 
 func HandleActivityPost(w http.ResponseWriter, r *http.Request) {
-	c := appengine.NewContext(r)
+	//c := appengine.NewContext(r)
+	var c context.Context
+	if val, ok := gorillacontext.GetOk(r, "Context"); ok {
+		c = val.(context.Context)
+	} else {
+		c = appengine.NewContext(r)
+	}
+
 	act := Activity{}
 
 	if err := json.NewDecoder(r.Body).Decode(&act); err != nil {
@@ -54,7 +59,14 @@ func HandleActivityPost(w http.ResponseWriter, r *http.Request) {
 }
 
 func HandleActivityPut(w http.ResponseWriter, r *http.Request) {
-	c := appengine.NewContext(r)
+	//c := appengine.NewContext(r)
+	var c context.Context
+	if val, ok := gorillacontext.GetOk(r, "Context"); ok {
+		c = val.(context.Context)
+	} else {
+		c = appengine.NewContext(r)
+	}
+
 	act := Activity{}
 
 	if err := json.NewDecoder(r.Body).Decode(&act); err != nil {
@@ -102,7 +114,13 @@ func HandleActivityPut(w http.ResponseWriter, r *http.Request) {
 }
 
 func HandleActivityGet(w http.ResponseWriter, r *http.Request) {
-	c := appengine.NewContext(r)
+	//c := appengine.NewContext(r)
+	var c context.Context
+	if val, ok := gorillacontext.GetOk(r, "Context"); ok {
+		c = val.(context.Context)
+	} else {
+		c = appengine.NewContext(r)
+	}
 
 	params := mux.Vars(r)
 
@@ -130,7 +148,13 @@ func HandleActivityGet(w http.ResponseWriter, r *http.Request) {
 }
 
 func HandleActivitiesGet(w http.ResponseWriter, r *http.Request) {
-	c := appengine.NewContext(r)
+	//c := appengine.NewContext(r)
+	var c context.Context
+	if val, ok := gorillacontext.GetOk(r, "Context"); ok {
+		c = val.(context.Context)
+	} else {
+		c = appengine.NewContext(r)
+	}
 
 	vars, err := url.ParseQuery(r.URL.RawQuery)
 	if err != nil {
@@ -177,7 +201,13 @@ func HandleActivitiesGet(w http.ResponseWriter, r *http.Request) {
 	}
 }
 func HandleActivityDelete(w http.ResponseWriter, r *http.Request) {
-	c := appengine.NewContext(r)
+	//c := appengine.NewContext(r)
+	var c context.Context
+	if val, ok := gorillacontext.GetOk(r, "Context"); ok {
+		c = val.(context.Context)
+	} else {
+		c = appengine.NewContext(r)
+	}
 
 	params := mux.Vars(r)
 	act := Activity{}

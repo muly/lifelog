@@ -2,15 +2,10 @@ package lifelog
 
 import (
 	"encoding/json"
-	//"fmt"
 	"net/http"
 	"net/url"
 	"strconv"
 	"time"
-
-	//"github.com/muly/lifelog/util"
-	//"model"
-	//"types"
 
 	gorillacontext "github.com/gorilla/context"
 	"github.com/gorilla/mux"
