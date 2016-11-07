@@ -1,13 +1,12 @@
-package model
+package lifelog
 
 import (
 	"golang.org/x/net/context"
 	"google.golang.org/appengine/datastore"
 
 	"time"
-
-	"types"
-	"util"
+	//"github.com/muly/lifelog/util"
+	//"types"
 )
 
 //TODO: need to add json tags for column names and to ignore blank fields
@@ -25,11 +24,11 @@ type (
 
 // Get
 func (al *ActivityLog) Get(c context.Context) (err error) {
-	key := datastore.NewKey(c, "ActivityLog", util.StringKey(al.Name), 0, nil)
+	key := datastore.NewKey(c, "ActivityLog", StringKey(al.Name), 0, nil)
 
 	err = datastore.Get(c, key, al)
 	if err != nil && err.Error() == "datastore: no such entity" {
-		err = types.ErrorNoMatch
+		err = ErrorNoMatch
 	}
 
 	return
@@ -37,7 +36,7 @@ func (al *ActivityLog) Get(c context.Context) (err error) {
 
 // Put (same for Post)
 func (al *ActivityLog) Put(c context.Context) error {
-	key := datastore.NewKey(c, "ActivityLog", util.StringKey(al.Name), 0, nil)
+	key := datastore.NewKey(c, "ActivityLog", StringKey(al.Name), 0, nil)
 
 	// put the record into the database and capture the key
 	key, err := datastore.Put(c, key, al)
@@ -79,11 +78,11 @@ func (als *ActivityLogs) Get(c context.Context, filter ActivityLog, offset int, 
 // Delete
 func (al *ActivityLog) Delete(c context.Context) (err error) {
 	// TODO: need to check for existance before deleting. if NOT exists, then throw ErrorNoMatch error (err = ErrorNoMatch)
-	if err = al.Get(c); err == types.ErrorNoMatch {
+	if err = al.Get(c); err == ErrorNoMatch {
 		return
 	}
 
-	key := datastore.NewKey(c, "ActivityLog", util.StringKey(al.Name), 0, nil)
+	key := datastore.NewKey(c, "ActivityLog", StringKey(al.Name), 0, nil)
 
 	err = datastore.Delete(c, key)
 

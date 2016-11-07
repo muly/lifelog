@@ -1,10 +1,10 @@
-package model
+package lifelog
 
 import (
 	"time"
 
-	"types"
-	"util"
+	//"github.com/muly/lifelog/util"
+	//"types"
 
 	"golang.org/x/net/context"
 	"google.golang.org/appengine/datastore"
@@ -24,7 +24,7 @@ type (
 func (goal *Goal) Put(c context.Context) error {
 
 	// generate the key
-	key := datastore.NewKey(c, "Goal", util.StringKey(goal.Name), 0, nil)
+	key := datastore.NewKey(c, "Goal", StringKey(goal.Name), 0, nil)
 
 	// put the record into the database and capture the key
 	key, err := datastore.Put(c, key, goal)
@@ -43,11 +43,11 @@ func (goal *Goal) Put(c context.Context) error {
 // Get retrieves the record based on the provided key.
 //
 func (goal *Goal) Get(c context.Context) (err error) {
-	key := datastore.NewKey(c, "Goal", util.StringKey(goal.Name), 0, nil)
+	key := datastore.NewKey(c, "Goal", StringKey(goal.Name), 0, nil)
 
 	err = datastore.Get(c, key, goal)
 	if err != nil && err.Error() == "datastore: no such entity" {
-		err = types.ErrorNoMatch
+		err = ErrorNoMatch
 	}
 
 	return
@@ -57,11 +57,11 @@ func (goal *Goal) Get(c context.Context) (err error) {
 //
 func (goal *Goal) Delete(c context.Context) (err error) {
 	// TODO: need to check for existance before deleting. if NOT exists, then throw ErrorNoMatch error (err = ErrorNoMatch)
-	if err = goal.Get(c); err == types.ErrorNoMatch {
+	if err = goal.Get(c); err == ErrorNoMatch {
 		return
 	}
 
-	key := datastore.NewKey(c, "Goal", util.StringKey(goal.Name), 0, nil)
+	key := datastore.NewKey(c, "Goal", StringKey(goal.Name), 0, nil)
 
 	err = datastore.Delete(c, key)
 
