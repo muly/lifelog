@@ -12,43 +12,43 @@ import (
 )
 
 var (
-	activityUrl string
+	activityLogUrl string
 )
 
 func init() {
-	activityUrl = testserver.URL + "/activity"
+	activityLogUrl = testserver.URL + "/activitylog"
 }
 
 /*func TestActivity(t *testing.T) {
 }*/
 
-func testActivity(t *testing.T, c context.Context, h http.Handler) {
+func testActivityLog(t *testing.T, c context.Context, h http.Handler) {
 	tcs := aeunittest.TestCases{}
 	tc := aeunittest.TestCase{}
 
 	//reset (tc), input (tc), append (to tcs) the test cases one after the other
 	tc = aeunittest.TestCase{} // reset
 	//input
-	tc.Name = "Activity Post new record test"
+	tc.Name = "Activity Log Post new record test"
 	tc.RequestBody = `{"Name":"test1"}`
 	tc.HttpVerb = "POST"
-	tc.Uri = activityUrl
+	tc.Uri = activityLogUrl
 	tc.WantStatusCode = http.StatusCreated
 	tcs = append(tcs, tc) // append
 
 	tc = aeunittest.TestCase{}
-	tc.Name = "Activity Post duplicate record test"
+	tc.Name = "Activity Log Post duplicate record test"
 	tc.RequestBody = `{"Name":"test1"}`
 	tc.HttpVerb = "POST"
-	tc.Uri = activityUrl
+	tc.Uri = activityLogUrl
 	tc.WantStatusCode = http.StatusBadRequest
 	tcs = append(tcs, tc)
 
 	tc = aeunittest.TestCase{}
-	tc.Name = "Activity Get existing record test"
+	tc.Name = "Activity Log Get existing record test"
 	tc.RequestBody = ``
 	tc.HttpVerb = "GET"
-	tc.Uri = activityUrl + "/test1"
+	tc.Uri = activityLogUrl + "/test1"
 	tc.WantStatusCode = http.StatusOK
 	tcs = append(tcs, tc)
 
@@ -61,5 +61,6 @@ func testActivity(t *testing.T, c context.Context, h http.Handler) {
 		tc.Run()
 	}
 
-	t.Log("Activity test cases execution completed")
+	t.Log("Activity Log test cases execution completed")
+
 }
