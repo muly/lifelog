@@ -2,20 +2,26 @@ package lifelog
 
 import (
 	"encoding/json"
-	"github.com/gorilla/mux"
-	"google.golang.org/appengine"
-
 	"net/http"
 	"net/url"
 	"strconv"
 	"time"
-	//"github.com/muly/lifelog/util"
-	//"model"
-	//"types"
+
+	gorillacontext "github.com/gorilla/context"
+	"github.com/gorilla/mux"
+	"golang.org/x/net/context"
+	"google.golang.org/appengine"
 )
 
 func HandleActivityLogPost(w http.ResponseWriter, r *http.Request) {
-	c := appengine.NewContext(r)
+	//c := appengine.NewContext(r)
+	var c context.Context
+	if val, ok := gorillacontext.GetOk(r, "Context"); ok {
+		c = val.(context.Context)
+	} else {
+		c = appengine.NewContext(r)
+	}
+
 	al := ActivityLog{}
 
 	if err := json.NewDecoder(r.Body).Decode(&al); err != nil {
@@ -53,7 +59,14 @@ func HandleActivityLogPost(w http.ResponseWriter, r *http.Request) {
 }
 
 func HandleActivityLogPut(w http.ResponseWriter, r *http.Request) {
-	c := appengine.NewContext(r)
+	//c := appengine.NewContext(r)
+	var c context.Context
+	if val, ok := gorillacontext.GetOk(r, "Context"); ok {
+		c = val.(context.Context)
+	} else {
+		c = appengine.NewContext(r)
+	}
+
 	al := ActivityLog{}
 
 	if err := json.NewDecoder(r.Body).Decode(&al); err != nil {
@@ -101,7 +114,13 @@ func HandleActivityLogPut(w http.ResponseWriter, r *http.Request) {
 }
 
 func HandleActivityLogGet(w http.ResponseWriter, r *http.Request) {
-	c := appengine.NewContext(r)
+	//c := appengine.NewContext(r)
+	var c context.Context
+	if val, ok := gorillacontext.GetOk(r, "Context"); ok {
+		c = val.(context.Context)
+	} else {
+		c = appengine.NewContext(r)
+	}
 
 	params := mux.Vars(r)
 
@@ -129,8 +148,13 @@ func HandleActivityLogGet(w http.ResponseWriter, r *http.Request) {
 }
 
 func HandleActivityLogsGet(w http.ResponseWriter, r *http.Request) {
-
-	c := appengine.NewContext(r)
+	//c := appengine.NewContext(r)
+	var c context.Context
+	if val, ok := gorillacontext.GetOk(r, "Context"); ok {
+		c = val.(context.Context)
+	} else {
+		c = appengine.NewContext(r)
+	}
 
 	vars, err := url.ParseQuery(r.URL.RawQuery)
 	if err != nil {
@@ -178,7 +202,13 @@ func HandleActivityLogsGet(w http.ResponseWriter, r *http.Request) {
 
 }
 func HandleActivityLogDelete(w http.ResponseWriter, r *http.Request) {
-	c := appengine.NewContext(r)
+	//c := appengine.NewContext(r)
+	var c context.Context
+	if val, ok := gorillacontext.GetOk(r, "Context"); ok {
+		c = val.(context.Context)
+	} else {
+		c = appengine.NewContext(r)
+	}
 
 	params := mux.Vars(r)
 	al := ActivityLog{}

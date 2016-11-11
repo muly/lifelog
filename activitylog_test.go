@@ -12,56 +12,43 @@ import (
 )
 
 var (
-	//testserver *httptest.Server
-	goalUrl string
+	activityLogUrl string
 )
 
 func init() {
-	//testserver = httptest.NewServer(Handlers())
-	goalUrl = testserver.URL + "/goal"
-
+	activityLogUrl = testserver.URL + "/activitylog"
 }
 
-/*func TestGoal(t *testing.T) {
-	c, done, err := aetest.NewContext()
-	if err != nil {
-		t.Fatal(err)
-	}
-	defer done()
-
-	h := Handlers()
-
-	//testGoal(t, c, h)
-
+/*func TestActivity(t *testing.T) {
 }*/
 
-func testGoal(t *testing.T, c context.Context, h http.Handler) {
+func testActivityLog(t *testing.T, c context.Context, h http.Handler) {
 	tcs := aeunittest.TestCases{}
 	tc := aeunittest.TestCase{}
 
 	//reset (tc), input (tc), append (to tcs) the test cases one after the other
 	tc = aeunittest.TestCase{} // reset
 	//input
-	tc.Name = "Goal Post new record test"
-	tc.RequestBody = `{"Name":"test1","Notes":"test"}`
+	tc.Name = "Activity Log Post new record test"
+	tc.RequestBody = `{"Name":"test1"}`
 	tc.HttpVerb = "POST"
-	tc.Uri = goalUrl
+	tc.Uri = activityLogUrl
 	tc.WantStatusCode = http.StatusCreated
 	tcs = append(tcs, tc) // append
 
 	tc = aeunittest.TestCase{}
-	tc.Name = "Goal Post duplicate record test"
-	tc.RequestBody = `{"Name":"test1","Notes":"test"}`
+	tc.Name = "Activity Log Post duplicate record test"
+	tc.RequestBody = `{"Name":"test1"}`
 	tc.HttpVerb = "POST"
-	tc.Uri = goalUrl
+	tc.Uri = activityLogUrl
 	tc.WantStatusCode = http.StatusBadRequest
 	tcs = append(tcs, tc)
 
 	tc = aeunittest.TestCase{}
-	tc.Name = "Goal Get existing record test"
+	tc.Name = "Activity Log Get existing record test"
 	tc.RequestBody = ``
 	tc.HttpVerb = "GET"
-	tc.Uri = goalUrl + "/test1"
+	tc.Uri = activityLogUrl + "/test1"
 	tc.WantStatusCode = http.StatusOK
 	tcs = append(tcs, tc)
 
@@ -74,6 +61,6 @@ func testGoal(t *testing.T, c context.Context, h http.Handler) {
 		tc.Run()
 	}
 
-	t.Log("Goal test cases execution completed")
+	t.Log("Activity Log test cases execution completed")
 
 }
