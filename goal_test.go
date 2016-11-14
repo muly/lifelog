@@ -49,12 +49,12 @@ func testGoal(t *testing.T, c context.Context, h http.Handler) {
 	tc.WantStatusCode = http.StatusCreated
 	tcs = append(tcs, tc) // append
 
-	tc = aeunittest.TestCase{} 	
+	tc = aeunittest.TestCase{}
 	tc.Name = "Goal Get existing record test"
 	tc.RequestBody = ``
 	tc.HttpVerb = "GET"
 	tc.Uri = goalUrl + "/test1"
-	tc.WantStatusCode =  http.StatusOK
+	tc.WantStatusCode = http.StatusOK
 
 	tcs = append(tcs, tc)
 	tc.Name = "Goal Post new record with duplicate key "
@@ -62,7 +62,7 @@ func testGoal(t *testing.T, c context.Context, h http.Handler) {
 	tc.HttpVerb = "POST"
 	tc.Uri = goalUrl
 	tc.WantStatusCode = http.StatusBadRequest
-	tcs = append(tcs, tc) 
+	tcs = append(tcs, tc)
 
 	tcs = append(tcs, tc)
 	tc.Name = "Goal Post Field validation-String field"
@@ -89,8 +89,7 @@ func testGoal(t *testing.T, c context.Context, h http.Handler) {
 	tcs = append(tcs, tc)
 
 	tcs = append(tcs, tc)
-	tc.Name = "Goal Post with typo in field name in json 
-/Sending Extra field"
+	tc.Name = "Goal Post with typo in field name in json/Sending Extra field"
 	tc.RequestBody = `{"Name":"test2","Note":"test2"}`
 	tc.HttpVerb = "POST"
 	tc.Uri = goalUrl
@@ -111,7 +110,7 @@ func testGoal(t *testing.T, c context.Context, h http.Handler) {
 	tc.HttpVerb = "POST"
 	tc.Uri = goalUrl
 	tc.WantStatusCode = http.StatusBadRequest
-	tcs = append(tcs, tc) 
+	tcs = append(tcs, tc)
 
 	tcs = append(tcs, tc)
 	tc.Name = "Goal Post with wrong key name"
@@ -119,10 +118,7 @@ func testGoal(t *testing.T, c context.Context, h http.Handler) {
 	tc.HttpVerb = "POST"
 	tc.Uri = goalUrl
 	tc.WantStatusCode = http.StatusBadRequest
-	tcs = append(tcs, tc) 
-
-
-
+	tcs = append(tcs, tc)
 
 	tc = aeunittest.TestCase{}
 	tc.Name = "Goal Get with key"
@@ -152,11 +148,9 @@ func testGoal(t *testing.T, c context.Context, h http.Handler) {
 	tc.Name = "Goal Get with blank key"
 	tc.RequestBody = ``
 	tc.HttpVerb = "GET"
-	tc.Uri = goalUrl 
+	tc.Uri = goalUrl
 	tc.WantStatusCode = http.StatusNotFound
 	tcs = append(tcs, tc)
-
-
 
 	tcs = append(tcs, tc)
 	tc.Name = "Goal Put Field validation-String field"
@@ -164,7 +158,7 @@ func testGoal(t *testing.T, c context.Context, h http.Handler) {
 	tc.HttpVerb = "PUT"
 	tc.Uri = goalUrl + "/test1"
 	tc.WantStatusCode = http.StatusBadRequest
-	tcs = append(tcs, tc) 
+	tcs = append(tcs, tc)
 
 	tcs = append(tcs, tc)
 	tc.Name = "Goal Put Field validation-Passing blank in mandatory fields"
@@ -172,15 +166,15 @@ func testGoal(t *testing.T, c context.Context, h http.Handler) {
 	tc.HttpVerb = "PUT"
 	tc.Uri = goalUrl + "/test1"
 	tc.WantStatusCode = http.StatusBadRequest
-	tcs = append(tcs, tc) 
+	tcs = append(tcs, tc)
 
 	tcs = append(tcs, tc)
 	tc.Name = "Goal Put Editing a record"
 	tc.RequestBody = `{"Name":"test1",'"Notes":"TestNotes New"}`
 	tc.HttpVerb = "PUT"
 	tc.Uri = goalUrl + "/test1"
-	tc.WantStatusCode = http.Statusok
-	tcs = append(tcs, tc) 
+	tc.WantStatusCode = http.StatusOK
+	tcs = append(tcs, tc)
 
 	tc = aeunittest.TestCase{}
 	tc.Name = "Goal Put Successful saving of the record to database"
@@ -196,11 +190,10 @@ func testGoal(t *testing.T, c context.Context, h http.Handler) {
 	tc.HttpVerb = "PUT"
 	tc.Uri = goalUrl + "/test1"
 	tc.WantStatusCode = http.StatusBadRequest
-	tcs = append(tcs, tc) 
+	tcs = append(tcs, tc)
 
 	tcs = append(tcs, tc)
-	tc.Name = "Goal Put with typo in field name in json 
-/Sending Extra field"
+	tc.Name = "Goal Put with typo in field name in json/Sending Extra field"
 	tc.RequestBody = `{"Name":"test1","Note":"test2"}`
 	tc.HttpVerb = "PUT"
 	tc.Uri = goalUrl + "/test1"
@@ -227,19 +220,15 @@ func testGoal(t *testing.T, c context.Context, h http.Handler) {
 	tc.Name = "Goal Put without parameter in URI"
 	tc.RequestBody = `{"Name":"test1","Notes":"test1new"}`
 	tc.HttpVerb = "PUT"
-	tc.Uri = goalUrl 
+	tc.Uri = goalUrl
 	tc.WantStatusCode = http.StatusForbidden
 	tcs = append(tcs, tc)
-
-
-
-
 
 	tcs = append(tcs, tc)
 	tc.Name = "Goal Delete without key"
 	tc.RequestBody = ``
 	tc.HttpVerb = "DELETE"
-	tc.Uri = goalUrl 
+	tc.Uri = goalUrl
 	tc.WantStatusCode = http.StatusForbidden
 	tcs = append(tcs, tc)
 
@@ -248,7 +237,7 @@ func testGoal(t *testing.T, c context.Context, h http.Handler) {
 	tc.RequestBody = ``
 	tc.HttpVerb = "DELETE"
 	tc.Uri = goalUrl + "/test1"
-	tc.WantStatusCode = http.statusok
+	tc.WantStatusCode = http.StatusOK
 	tcs = append(tcs, tc)
 
 	tcs = append(tcs, tc)

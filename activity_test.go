@@ -36,12 +36,12 @@ func testActivity(t *testing.T, c context.Context, h http.Handler) {
 	tc.WantStatusCode = http.StatusCreated
 	tcs = append(tcs, tc) // append
 
-	tc = aeunittest.TestCase{} 	
+	tc = aeunittest.TestCase{}
 	tc.Name = "Activity Get existing record test"
 	tc.RequestBody = ``
 	tc.HttpVerb = "GET"
 	tc.Uri = activityUrl + "/test1"
-	tc.WantStatusCode =  http.StatusOK
+	tc.WantStatusCode = http.StatusOK
 
 	tcs = append(tcs, tc)
 	tc.Name = "Activity Post new record with duplicate key "
@@ -49,7 +49,7 @@ func testActivity(t *testing.T, c context.Context, h http.Handler) {
 	tc.HttpVerb = "POST"
 	tc.Uri = activityUrl
 	tc.WantStatusCode = http.StatusBadRequest
-	tcs = append(tcs, tc) 
+	tcs = append(tcs, tc)
 
 	tcs = append(tcs, tc)
 	tc.Name = "Activity Post Field validation-String field"
@@ -76,8 +76,7 @@ func testActivity(t *testing.T, c context.Context, h http.Handler) {
 	tcs = append(tcs, tc)
 
 	tcs = append(tcs, tc)
-	tc.Name = "Activity Post with typo in field name in json 
-/Sending Extra field"
+	tc.Name = "Activity Post with typo in field name in json/Sending Extra field"
 	tc.RequestBody = `{"Name":"test2","ID":"test2"}`
 	tc.HttpVerb = "POST"
 	tc.Uri = activityUrl
@@ -98,7 +97,7 @@ func testActivity(t *testing.T, c context.Context, h http.Handler) {
 	tc.HttpVerb = "POST"
 	tc.Uri = activityUrl
 	tc.WantStatusCode = http.StatusBadRequest
-	tcs = append(tcs, tc) 
+	tcs = append(tcs, tc)
 
 	tcs = append(tcs, tc)
 	tc.Name = "Activity Post with wrong key name"
@@ -106,10 +105,7 @@ func testActivity(t *testing.T, c context.Context, h http.Handler) {
 	tc.HttpVerb = "POST"
 	tc.Uri = activityUrl
 	tc.WantStatusCode = http.StatusBadRequest
-	tcs = append(tcs, tc) 
-
-
-
+	tcs = append(tcs, tc)
 
 	tc = aeunittest.TestCase{}
 	tc.Name = "Activity Get with key"
@@ -139,12 +135,9 @@ func testActivity(t *testing.T, c context.Context, h http.Handler) {
 	tc.Name = "Activity Get with blank key"
 	tc.RequestBody = ``
 	tc.HttpVerb = "GET"
-	tc.Uri = activityUrl 
+	tc.Uri = activityUrl
 	tc.WantStatusCode = http.StatusNotFound
 	tcs = append(tcs, tc)
-
-
-
 
 	tcs = append(tcs, tc)
 	tc.Name = "Activity Put Field validation-String field"
@@ -152,7 +145,7 @@ func testActivity(t *testing.T, c context.Context, h http.Handler) {
 	tc.HttpVerb = "PUT"
 	tc.Uri = activityUrl + "/test1"
 	tc.WantStatusCode = http.StatusBadRequest
-	tcs = append(tcs, tc) 
+	tcs = append(tcs, tc)
 
 	tcs = append(tcs, tc)
 	tc.Name = "Activity Put Field validation-Passing blank in mandatory fields"
@@ -160,15 +153,15 @@ func testActivity(t *testing.T, c context.Context, h http.Handler) {
 	tc.HttpVerb = "PUT"
 	tc.Uri = activityUrl + "/test1"
 	tc.WantStatusCode = http.StatusBadRequest
-	tcs = append(tcs, tc) 
+	tcs = append(tcs, tc)
 
 	tcs = append(tcs, tc)
 	tc.Name = "Activity Put Editing a record"
 	tc.RequestBody = `{"Name":"test1",'"GoalID":"TestNotes New"}`
 	tc.HttpVerb = "PUT"
 	tc.Uri = activityUrl + "/test1"
-	tc.WantStatusCode = http.Statusok
-	tcs = append(tcs, tc) 
+	tc.WantStatusCode = http.StatusOK
+	tcs = append(tcs, tc)
 
 	tc = aeunittest.TestCase{}
 	tc.Name = "Activity Put Successful saving of the record to database"
@@ -184,11 +177,10 @@ func testActivity(t *testing.T, c context.Context, h http.Handler) {
 	tc.HttpVerb = "PUT"
 	tc.Uri = activityUrl + "/test1"
 	tc.WantStatusCode = http.StatusBadRequest
-	tcs = append(tcs, tc) 
+	tcs = append(tcs, tc)
 
 	tcs = append(tcs, tc)
-	tc.Name = "Activity Put with typo in field name in json 
-/Sending Extra field"
+	tc.Name = "Activity Put with typo in field name in json/Sending Extra field"
 	tc.RequestBody = `{"Name":"test1","Id":"test2"}`
 	tc.HttpVerb = "PUT"
 	tc.Uri = activityUrl + "/test1"
@@ -215,17 +207,15 @@ func testActivity(t *testing.T, c context.Context, h http.Handler) {
 	tc.Name = "Activity Put without parameter in URI"
 	tc.RequestBody = `{"Name":"test1","GoalID":"test1new"}`
 	tc.HttpVerb = "PUT"
-	tc.Uri = activityUrl 
+	tc.Uri = activityUrl
 	tc.WantStatusCode = http.StatusForbidden
 	tcs = append(tcs, tc)
-
-
 
 	tcs = append(tcs, tc)
 	tc.Name = "Activity Delete without key"
 	tc.RequestBody = ``
 	tc.HttpVerb = "DELETE"
-	tc.Uri = activityUrl 
+	tc.Uri = activityUrl
 	tc.WantStatusCode = http.StatusForbidden
 	tcs = append(tcs, tc)
 
@@ -234,7 +224,7 @@ func testActivity(t *testing.T, c context.Context, h http.Handler) {
 	tc.RequestBody = ``
 	tc.HttpVerb = "DELETE"
 	tc.Uri = activityUrl + "/test1"
-	tc.WantStatusCode = http.statusok
+	tc.WantStatusCode = http.StatusOK
 	tcs = append(tcs, tc)
 
 	tcs = append(tcs, tc)
@@ -252,35 +242,6 @@ func testActivity(t *testing.T, c context.Context, h http.Handler) {
 	tc.Uri = activityUrl + "/xyz"
 	tc.WantStatusCode = http.StatusNotFound
 	tcs = append(tcs, tc)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 	tc = aeunittest.TestCase{}
 	tc.Name = "Activity Post duplicate record test"
