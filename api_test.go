@@ -47,6 +47,8 @@ func TestActivityLog(t *testing.T) {
 	testActivityLog(t, c, h)
 }
 
+//Note: had to write three separate Test* functions and call the individual test* functions, as wrapping all the 3 test* functions into single Test function is causing performance issues
+
 func testActivity(t *testing.T, c context.Context, h http.Handler) {
 	tcs := aeunittest.TestCases{}
 
