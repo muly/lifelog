@@ -138,7 +138,7 @@ func HandleGoalGet(w http.ResponseWriter, r *http.Request) {
 
 	// if given goal is not found, return appropriate error
 	if err := goal.Get(c); err == ErrorNoMatch {
-		http.Error(w, err.Error(), http.StatusBadRequest)
+		http.Error(w, err.Error(), http.StatusNotFound)
 		return
 	} else if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
