@@ -1,5 +1,6 @@
 package lifelog
 
+/*
 import (
 	"net/http"
 	//"net/http/httptest"
@@ -19,10 +20,8 @@ func init() {
 	activityUrl = testserver.URL + "/activity"
 }
 
-/*func TestActivity(t *testing.T) {
-}*/
 
-func testActivity(t *testing.T, c context.Context, h http.Handler) {
+func testActivity2(t *testing.T, c context.Context, h http.Handler) {
 	tcs := aeunittest.TestCases{}
 	tc := aeunittest.TestCase{}
 
@@ -265,8 +264,11 @@ func testActivity(t *testing.T, c context.Context, h http.Handler) {
 		tc.Handler = h
 		tc.T = t
 
+		//t.Log("Running Test case:" + tc.Name)
 		tc.Run()
+
 	}
 
 	t.Log("Activity test cases execution completed")
 }
+*/
