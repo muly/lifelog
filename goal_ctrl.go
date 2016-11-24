@@ -107,7 +107,7 @@ func HandleGoalPut(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	w.Header().Set("Content-Type", "application/json")
-	w.WriteHeader(http.StatusCreated)
+	w.WriteHeader(http.StatusOK)
 
 	if err := json.NewEncoder(w).Encode(goal); err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
@@ -178,7 +178,7 @@ func HandleGoalDelete(w http.ResponseWriter, r *http.Request) {
 
 	err := goal.Delete(c)
 	if err == ErrorNoMatch {
-		http.Error(w, err.Error(), http.StatusOK)
+		http.Error(w, err.Error(), http.StatusNotFound)
 		return
 	} else if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)

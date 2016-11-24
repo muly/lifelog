@@ -104,7 +104,7 @@ func HandleActivityPut(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	w.Header().Set("Content-Type", "application/json")
-	w.WriteHeader(http.StatusCreated)
+	w.WriteHeader(http.StatusOK)
 
 	if err := json.NewEncoder(w).Encode(act); err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
@@ -129,7 +129,7 @@ func HandleActivityGet(w http.ResponseWriter, r *http.Request) {
 
 	// if given goal is not found, return appropriate error
 	if err := act.Get(c); err == ErrorNoMatch {
-		http.Error(w, err.Error(), http.StatusBadRequest)
+		http.Error(w, err.Error(), http.StatusNotFound)
 		return
 	} else if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
@@ -217,7 +217,7 @@ func HandleActivityDelete(w http.ResponseWriter, r *http.Request) {
 	err := act.Delete(c)
 
 	if err == ErrorNoMatch {
-		http.Error(w, err.Error(), http.StatusOK)
+		http.Error(w, err.Error(), http.StatusNotFound)
 		return
 	} else if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
