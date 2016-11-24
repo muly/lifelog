@@ -1,0 +1,32 @@
+Name,Uri,HttpVerb,RequestBody,WantStatusCode,WantResponseBody,Skip,ref #,Notes
+ActivityLog Post Field validation-String field,/activitylog,POST,"{""Name"":123,""Notes"":""Test123""}",400 bad request,?,,1.a.1,
+ActivityLog Post Field validation-String field,/activitylog,POST,"{""Name"":""123"",""Notes"":123}",400 bad request,?,,1.a.2,
+ActivityLog Post Field validation-Passing blank in mandatory fields,/activitylog,POST,"{""Name"":"""".""Notes"":""test4""}",400 bad request,?,,1.b,
+ActivityLog Post new record test,/activitylog,POST,"{""Name"":""test1"",""Notes"":""test""}",201 (created),"{""Name"":""test1"",""Notes"":""test"",""CreatedOn"":"""",""ModifiedOn"":""""}",,2,"the value for the date fields is ignored in ""want - Response body"" as they are not deterministic."
+ActivityLog Post Get same record,/activitylog/test1,GET,,200 ok,,,2.2,
+ActivityLog Post new record with duplicate key ,/activitylog,POST,"{""Name"":""test1"",""Notes"":""test""}",400 bad request,"{""Name"":""test1"",""Notes"":""test"",""CreatedOn"":"""",""ModifiedOn"":""""}",,3,"the value for the date fields is ignored in ""want - Response body"" as they are not deterministic."
+ActivityLog Post with typo in field name in json/Sending Extra field,/activitylog,POST,"{""Name"":""test2"",""Note"":""test2""}",400 bad request,?,TRUE,4,"skipped as this is a known issue #27, #28"
+ActivityLog Post Invalid Json,/activitylog,POST,"{""Name"":""test3""Notes"":""testnotes3""}",400 bad request,?,,5,
+ActivityLog Post without body,/activitylog,POST,,400 bad request,?,,6,
+ActivityLog Post with wrong key name,/activitylog,POST,"{""id"":""test4"",""Notes"":""testNotes4""}",400 bad request,,TRUE,7,skipped as this is a known issue #28
+,,,,,,,,
+ActivityLog Get with key,/activitylog/test1,GET,,200 ok,"check if all the fields are correct in the response as per the database, including the key",,1.a,
+ActivityLog Get time field in response should be of RFC 3339 format ,/activitylog/test1,GET,,200 ok ,"example “2016-10-02T15:04:05-07:00""",,1.b,
+ActivityLog Get with nonexisting Key,/activitylog/xyz,GET,,404 not found,,,2,Need to be fixed in controller with correct statuscode. Done
+ActivityLog Get with blank key,/activitylog/,GET,,200 OK,,,3,skipped as this is a known issue #33
+,,,,,,,,
+ActivityLog Put Field validation-String field,/activitylog/test1,PUT,"{""Name"":""test1"",""Notes"":123}",400 bad request,?,,1.a,
+ActivityLog Put Field validation-Passing blank in mandatory fields,/activitylog/test1,PUT,"{""Name"":"""",""Notes"":""test4""}",400 bad request,?,TRUE,1.b,skipped as this is a known issue #28
+ActivityLog Put Modifying a record,/activitylog/test1,PUT,"{""Name"":""test1"",""Notes"":""TestNotes New""}",200 ok,,,2.1,Need to be fixed in controller with correct statuscode
+ActivityLog Put Successful saving of the record to database,/activitylog/test1,GET,,200 ok,"{""Name"":""test1"",""Notes"":""TestNotes New""}",,2.2,
+ActivityLog Put new key should NOT be allowed,/activitylog/xyz,PUT,"{""Name""xyz"":""Notes"",""TestNotes New""}",400 bad request,,,3,
+ActivityLog Put with typo in field name in json/Sending Extra field,/activitylog/test1,PUT,"{""Name"":""test1"",""Note"":""test2""}",400 bad request,?,TRUE,4,"skipped as this is a known issue #27, #28"
+ActivityLog Put Invalid Json,/activitylog/test1,PUT,"{""Name"":""test1""Notes"":""testnotes3""}",400 bad request,?,,5,
+ActivityLog Put key in URL not same as key in Body,/activitylog/test1,PUT,"{""Name"":""test10"",""Notes"":""Test123""}",400 bad request,,,6,
+"ActivityLog Put without parameter in URI, with tailing /",/activitylog/,PUT,"{""Name"":""test1"",""Notes"":""test1new""}",404 not found,,,7.a,changed the want code to 404
+ActivityLog Put without parameter in URI,/activitylog,PUT,"{""Name"":""test1"",""Notes"":""test1new""}",404 not found,,,7.b,
+,,,,,,,,
+ActivityLog Delete without key,/activitylog/,DELETE,,404 not found,,,1,changed the want code to 404
+ActivityLog Delete remove record,/activitylog/test1,DELETE,,200 ok,,,2.1,
+ActivityLog Delete Get same record,/activitylog/test1,GET,,404 not found,,,2.2,already noted in above notes. so no further action required
+ActivityLog Delete  non Existing record,/activitylog/xyz,DELETE,,404 not found,,,3,to be fixed in the controller
