@@ -5,6 +5,7 @@ import (
 	"net/http"
 	//"net/http/httptest"
 	"testing"
+	//"encoding/json"
 
 	"github.com/muly/aeunittest"
 
@@ -27,6 +28,7 @@ func TestGoal(t *testing.T) {
 	testGoal(t, c, h)
 }
 
+/*
 func TestActivity(t *testing.T) {
 	c, done, err := aetest.NewContext()
 	if err != nil {
@@ -34,7 +36,7 @@ func TestActivity(t *testing.T) {
 	}
 	defer done()
 
-	testActivity(t, c, h)
+	//testActivity(t, c, h)
 }
 
 func TestActivityLog(t *testing.T) {
@@ -46,7 +48,7 @@ func TestActivityLog(t *testing.T) {
 
 	testActivityLog(t, c, h)
 }
-
+*/
 //Note: had to write three separate Test* functions and call the individual test* functions, as wrapping all the 3 test* functions into single Test function is causing performance issues
 
 func testActivity(t *testing.T, c context.Context, h http.Handler) {
@@ -71,7 +73,7 @@ func testActivity(t *testing.T, c context.Context, h http.Handler) {
 func testGoal(t *testing.T, c context.Context, h http.Handler) {
 	tcs := aeunittest.TestCases{}
 
-	if err := tcs.Load(`testcases\lifelog test cases - Goal.csv`, ',', true); err != nil {
+	if err := tcs.Load(`testcases\Goal Small.csv`, ',', true); err != nil {
 		t.Fatal(err)
 	}
 
@@ -81,7 +83,14 @@ func testGoal(t *testing.T, c context.Context, h http.Handler) {
 		tc.Handler = h
 		tc.T = t
 
+		tc.Log("Want:", tc.WantResponseBody)
+
 		tc.Run()
+
+		//TODO: need to use Run1(), get the response, convert to Goal2 struct format, and compare with want (after converting it to Goal2 aswell)
+		//GotResponseBody := tc.Run1()
+
+		//tc.Log("Got ", string(GotResponseBody))
 	}
 
 	//t.Log("Goal test cases execution completed")

@@ -11,11 +11,19 @@ import (
 )
 
 type (
+	Goal2 struct {
+		Name  string
+		Notes string `json:"Notes,omitempty"`
+	}
+
+	Common struct {
+		CreatedOn  time.Time `json:"-"`
+		ModifiedOn time.Time `json:"-"` //`json:"ModifiedOn,omitempty"`
+	}
+
 	Goal struct {
-		Name       string
-		Notes      string `json:"Notes,omitempty"`
-		CreatedOn  time.Time
-		ModifiedOn time.Time `json:"ModifiedOn,omitempty"`
+		Goal2
+		Common
 	}
 	Goals []Goal
 )
