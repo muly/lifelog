@@ -1,7 +1,7 @@
 package lifelog
 
 import (
-	"time"
+	//"time"
 
 	//"github.com/muly/lifelog/util"
 	//"types"
@@ -11,19 +11,14 @@ import (
 )
 
 type (
-	Goal2 struct {
+	GoalSimple struct {
 		Name  string
 		Notes string `json:"Notes,omitempty"`
 	}
 
-	Common struct {
-		CreatedOn  time.Time
-		ModifiedOn time.Time `json:"ModifiedOn,omitempty"`
-	}
-
 	Goal struct {
-		Goal2
-		Common
+		GoalSimple
+		CommonSystemFields
 	}
 	Goals []Goal
 )

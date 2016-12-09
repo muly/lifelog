@@ -11,11 +11,14 @@ import (
 
 //TODO: need to add json tags for column names and to ignore blank fields
 type (
+	ActivitySimple struct {
+		Name   string
+		GoalID string
+	}
+
 	Activity struct {
-		Name       string
-		GoalID     string
-		CreatedOn  time.Time `json:"CreatedOn,omitempty"`
-		ModifiedOn time.Time `json:"ModifiedOn,omitempty"`
+		ActivitySimple
+		CommonSystemFields
 	}
 	Activities []Activity
 )

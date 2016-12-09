@@ -15,6 +15,8 @@ import (
 )
 
 func HandleGoalPost(w http.ResponseWriter, r *http.Request) {
+	//w.Header().Set("Content-Type", "application/json")
+
 	//c := appengine.NewContext(r)
 	var c context.Context
 	if val, ok := gorillacontext.GetOk(r, "Context"); ok {
@@ -26,7 +28,8 @@ func HandleGoalPost(w http.ResponseWriter, r *http.Request) {
 	goal := Goal{}
 
 	if err := json.NewDecoder(r.Body).Decode(&goal); err != nil {
-		http.Error(w, err.Error(), http.StatusBadRequest)
+		//http.Error(w, err.Error(), http.StatusBadRequest)
+		WriteResponse(w, http.StatusBadRequest, "application/json", ErrorResponse{err.Error()})
 		return
 	}
 
@@ -36,26 +39,30 @@ func HandleGoalPost(w http.ResponseWriter, r *http.Request) {
 	if err := goalSrc.Get(c); err == ErrorNoMatch {
 		// do nothing
 	} else if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
+		//w.WriteHeader(http.StatusInternalServerError)
+		//http.Error(w, ErrorResponse{err.Error()}, http.StatusInternalServerError)
+		WriteResponse(w, http.StatusInternalServerError, "application/json", ErrorResponse{err.Error()})
 		return
 	} else {
-		http.Error(w, "record already exists", http.StatusBadRequest)
+		//http.Error(w, ErrorResponse{"record already exists"}, http.StatusBadRequest)
+		WriteResponse(w, http.StatusBadRequest, "application/json", ErrorResponse{"record already exists"})
 		return
 	}
 
 	goal.CreatedOn = time.Now()
 
 	if err := goal.Put(c); err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
+		//http.Error(w, err.Error(), http.StatusInternalServerError)
+		WriteResponse(w, http.StatusInternalServerError, "application/json", ErrorResponse{err.Error()})
 		return
 	}
-	w.Header().Set("Content-Type", "application/json")
-	w.WriteHeader(http.StatusCreated)
 
-	if err := json.NewEncoder(w).Encode(goal); err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
-		return
-	}
+	//w.WriteHeader(http.StatusCreated)
+	//if err := json.NewEncoder(w).Encode(goal); err != nil {
+	//	http.Error(w, err.Error(), http.StatusInternalServerError)
+	//	return
+	//}
+	WriteResponse(w, http.StatusCreated, "application/json", goal)
 
 }
 
@@ -186,6 +193,7 @@ func HandleGoalDelete(w http.ResponseWriter, r *http.Request) {
 	}
 
 	w.WriteHeader(http.StatusOK)
+	w.Write([]byte("{}"))
 
 }
 
