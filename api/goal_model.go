@@ -17,8 +17,8 @@ type (
 	}
 
 	Common struct {
-		CreatedOn  time.Time `json:"-"`
-		ModifiedOn time.Time `json:"-"` //`json:"ModifiedOn,omitempty"`
+		CreatedOn  time.Time
+		ModifiedOn time.Time `json:"ModifiedOn,omitempty"`
 	}
 
 	Goal struct {

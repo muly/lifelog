@@ -4,8 +4,9 @@ import (
 	//"github.com/muly/aeunittest"
 	"net/http"
 	//"net/http/httptest"
+	"encoding/json"
+	"reflect"
 	"testing"
-	//"encoding/json"
 
 	"github.com/muly/aeunittest"
 
@@ -83,12 +84,32 @@ func testGoal(t *testing.T, c context.Context, h http.Handler) {
 		tc.Handler = h
 		tc.T = t
 
-		tc.Log("Want:", tc.WantResponseBody)
+		//tc.Log("Want:", tc.WantResponseBody)
 
-		tc.Run()
+		//tc.Run()
+		g1 := tc.Run1()
 
-		//TODO: need to use Run1(), get the response, convert to Goal2 struct format, and compare with want (after converting it to Goal2 aswell)
-		//GotResponseBody := tc.Run1()
+		got := Goal2{}
+
+		if err := json.Unmarshal(g1, &got); err != nil {
+			tc.Error("Want Response Body invalid format: ", err.Error())
+			return
+		}
+
+		want := Goal2{}
+
+		if err := json.Unmarshal([]byte(tc.WantResponseBody), &want); err != nil {
+			tc.Error("Want Response Body invalid format: ", err.Error())
+			return
+		}
+
+		//		tc.Log("Want:", want)
+		//		tc.Log("Got: ", got)
+		//tc.Log("DeepEqual:", reflect.DeepEqual(got, want))
+
+		if !reflect.DeepEqual(got, want) {
+			tc.Error(tc.Name, ": Response Body : wanted ", want, " but got ", got)
+		}
 
 		//tc.Log("Got ", string(GotResponseBody))
 	}
