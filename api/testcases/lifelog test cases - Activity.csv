@@ -23,6 +23,7 @@ Activity Put new key should NOT be allowed,/activity/xyz,PUT,"{""Name"":""xyz"",
 Activity Put with typo in field name in json/Sending Extra field,/activity/test1,PUT,"{""Name"":""test1"",""Note"":""test2""}",400 bad request,?,TRUE,4,"skipped as this is a known issue #27, #28"
 Activity Put Invalid Json,/activity/test1,PUT,"{""Name"":""test1""GoalID"":""testGoalID3""}",400 bad request,?,,5,
 Activity Put key in URL not same as key in Body,/activity/test1,PUT,"{""Name"":""test10"",""GoalID"":""Test123""}",400 bad request,,,6,
+Activity Put key in URL but not in Body,/activity/test1,PUT,"{""GoalID"":""Test123""}",200 ok,,,,
 "Activity Put without parameter in URI, with tailing /",/activity/,PUT,"{""Name"":""test1"",""GoalID"":""Test1New""}",404 not found,,,7.a,changed the want code to 404
 Activity Put without parameter in URI,/activity,PUT,"{""Name"":""test1"",""GoalID"":""Test1New""}",404 not found,,,7.b,
 ,,,,,,,,

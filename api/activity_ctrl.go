@@ -76,9 +76,17 @@ func HandleActivityPut(w http.ResponseWriter, r *http.Request) {
 
 	params := mux.Vars(r)
 
+	id := params["id"]
+
+	if act.Name != "" && id != act.Name {
+		http.Error(w, "key in the URI and key in Request body are not matching", http.StatusBadRequest)
+		return
+	}
+	act.Name = id
+
 	// if the goal name (string key) provided in the URI doesn't exist in database, then return
 	actsrc := Activity{}
-	actsrc.Name = params["id"]
+	actsrc.Name = id
 	if err := actsrc.Get(c); err == ErrorNoMatch {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return

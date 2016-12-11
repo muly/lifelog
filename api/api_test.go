@@ -1,14 +1,14 @@
 package lifelog
 
 import (
-	//"github.com/muly/aeunittest"
+	//"github.com/muly/aeinttest"
 	"net/http"
 	//"net/http/httptest"
 	"encoding/json"
 	"reflect"
 	"testing"
 
-	"github.com/muly/aeunittest"
+	"github.com/muly/aeinttest"
 
 	"github.com/gorilla/mux"
 	"golang.org/x/net/context"
@@ -52,7 +52,7 @@ func TestActivityLog(t *testing.T) {
 //Note: had to write three separate Test* functions and call the individual test* functions, as wrapping all the 3 test* functions into single Test function is causing performance issues
 
 func testActivity(t *testing.T, c context.Context, h http.Handler) {
-	tcs := aeunittest.TestCases{}
+	tcs := aeinttest.TestCases{}
 
 	if err := tcs.Load(`testcases\lifelog test cases - Activity.csv`, ',', true); err != nil {
 		t.Fatal(err)
@@ -72,7 +72,7 @@ func testActivity(t *testing.T, c context.Context, h http.Handler) {
 func testGoal(t *testing.T, c context.Context, h http.Handler) {
 
 	// Load the test case data
-	tcs := aeunittest.TestCases{}
+	tcs := aeinttest.TestCases{}
 	if err := tcs.Load(`testcases\lifelog test cases - Goal.csv`, ',', true); err != nil {
 		t.Fatal(err)
 	}
@@ -121,7 +121,7 @@ func testGoal(t *testing.T, c context.Context, h http.Handler) {
 }
 
 func testActivityLog(t *testing.T, c context.Context, h http.Handler) {
-	tcs := aeunittest.TestCases{}
+	tcs := aeinttest.TestCases{}
 
 	if err := tcs.Load(`testcases\lifelog test cases - ActivityLog.csv`, ',', true); err != nil {
 		t.Fatal(err)
