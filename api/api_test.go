@@ -29,6 +29,7 @@ func TestGoal(t *testing.T) {
 	testGoal(t, c, h)
 }
 
+/*
 func TestActivity(t *testing.T) {
 	c, done, err := aetest.NewContext()
 	if err != nil {
@@ -47,7 +48,7 @@ func TestActivityLog(t *testing.T) {
 	defer done()
 
 	testActivityLog(t, c, h)
-}
+}*/
 
 //Note: had to write three separate Test* functions and call the individual test* functions, as wrapping all the 3 test* functions into single Test function is causing performance issues
 
@@ -96,26 +97,32 @@ func testGoal(t *testing.T, c context.Context, h http.Handler) {
 			continue
 		}
 
-		// modify the 'got' to remove the system fields
-		got := GoalSimple{}
-		if err := json.Unmarshal(gotResponseBody, &got); err != nil {
-			tc.Error(tc.Name, ": Got Response Body invalid format: \n", string(gotResponseBody), "\n", err.Error())
-			continue
-		}
+		testResponseBody(tc, string(gotResponseBody), GoalSimple{})
 
-		// modify the 'want' to remove the system fields, if any
-		want := GoalSimple{}
-		if err := json.Unmarshal([]byte(tc.WantResponseBody), &want); err != nil {
-			tc.Error(tc.Name, ": Want Response Body invalid format: \n", tc.WantResponseBody, "\n", err.Error())
-			continue
-		}
+	}
 
-		// compare the 'got' with 'want', and report if not matching
-		if !reflect.DeepEqual(got, want) {
-			tc.Error(tc.Name, ": Response Body : wanted ", want, " but got ", got)
-			continue
-		}
+}
 
+func testResponseBody(tc aeinttest.TestCase, gotResponseBody string, o interface{}) {
+
+	// modify the 'got' to remove the system fields
+	//got := o
+	if err := json.Unmarshal([]byte(gotResponseBody), &o); err != nil {
+		tc.Error(tc.Name, ": Got Response Body invalid format: \n", string(gotResponseBody), "\n", err.Error())
+		return
+	}
+
+	// modify the 'want' to remove the system fields, if any
+	want := o
+	if err := json.Unmarshal([]byte(tc.WantResponseBody), &want); err != nil {
+		tc.Error(tc.Name, ": Want Response Body invalid format: \n", tc.WantResponseBody, "\n", err.Error())
+		return
+	}
+
+	// compare the 'got' with 'want', and report if not matching
+	if !reflect.DeepEqual(o, want) {
+		tc.Error(tc.Name, ": Response Body : wanted ", want, " but got ", o)
+		return
 	}
 
 }
