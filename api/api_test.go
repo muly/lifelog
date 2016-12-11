@@ -97,34 +97,32 @@ func testGoal(t *testing.T, c context.Context, h http.Handler) {
 			continue
 		}
 
-		testResponseBody(tc, string(gotResponseBody), GoalSimple{})
+		//testResponseBody(tc, string(gotResponseBody), GoalSimple{})
+		//	}
+		//}
+		//func testResponseBody(tc aeinttest.TestCase, gotResponseBody string, o interface{}) {
+
+		// modify the 'got' to remove the system fields
+		got := GoalSimple{}
+		if err := json.Unmarshal(gotResponseBody, &got); err != nil {
+			tc.Error(tc.Name, ": Got Response Body invalid format: \n", string(gotResponseBody), "\n", err.Error())
+			continue
+		}
+
+		// modify the 'want' to remove the system fields, if any
+		want := GoalSimple{}
+		if err := json.Unmarshal([]byte(tc.WantResponseBody), &want); err != nil {
+			tc.Error(tc.Name, ": Want Response Body invalid format: \n", tc.WantResponseBody, "\n", err.Error())
+			continue
+		}
+
+		// compare the 'got' with 'want', and report if not matching
+		if !reflect.DeepEqual(got, want) {
+			tc.Error(tc.Name, ": Response Body : wanted ", want, " but got ", got)
+			continue
+		}
 
 	}
-
-}
-
-func testResponseBody(tc aeinttest.TestCase, gotResponseBody string, o interface{}) {
-
-	// modify the 'got' to remove the system fields
-	//got := o
-	if err := json.Unmarshal([]byte(gotResponseBody), &o); err != nil {
-		tc.Error(tc.Name, ": Got Response Body invalid format: \n", string(gotResponseBody), "\n", err.Error())
-		return
-	}
-
-	// modify the 'want' to remove the system fields, if any
-	want := o
-	if err := json.Unmarshal([]byte(tc.WantResponseBody), &want); err != nil {
-		tc.Error(tc.Name, ": Want Response Body invalid format: \n", tc.WantResponseBody, "\n", err.Error())
-		return
-	}
-
-	// compare the 'got' with 'want', and report if not matching
-	if !reflect.DeepEqual(o, want) {
-		tc.Error(tc.Name, ": Response Body : wanted ", want, " but got ", o)
-		return
-	}
-
 }
 
 func testActivityLog(t *testing.T, c context.Context, h http.Handler) {
