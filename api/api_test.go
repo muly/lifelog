@@ -86,7 +86,7 @@ func testGoal(t *testing.T, c context.Context, h http.Handler) {
 		// execute test case to check the status code and capture the response body
 		gotResponseBody := tc.RunCheckStatusCode()
 
-		//// Response Body Test
+		////// Response Body Test
 
 		if tc.SkipFlag { //skip the Response Body test if skip flag is true
 			continue
