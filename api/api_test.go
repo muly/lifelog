@@ -116,7 +116,6 @@ func testGoal(t *testing.T, c context.Context, h http.Handler) {
 
 	}
 
-	//t.Log("Goal test cases execution completed")
 }
 
 func testActivityLog(t *testing.T, c context.Context, h http.Handler) {
