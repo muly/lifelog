@@ -1,0 +1,7 @@
+Name,Uri,HttpVerb,RequestBody,WantStatusCode,WantResponseBody,Skip,ref #,Notes
+Goal Post new record test,/goal,POST,"{""Name"":""testName"",""Notes"":""testNotes""}",201 (created),"{""Notes"":""testNotes"",""Name"":""testName""}",,2.1,"the value for the date fields is ignored in ""want - Response body"" as they are not deterministic."
+Goal Post Get record,/goal/testname,GET,,200 ok,"{""Notes"":""testNotes"",""Name"":""testName"",""CreatedOn"":""20151209""}",,2.2,
+,,,,,,,,
+,,,,,,,,
+#Notes from testing:,,,,,,,,
+#1) order of test cases in this document is not same as order of test records in code,,,,,,,,

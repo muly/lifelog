@@ -75,10 +75,11 @@ func HandleActivityLogPut(w http.ResponseWriter, r *http.Request) {
 	}
 
 	params := mux.Vars(r)
+	id := params["id"]
 
 	// if the goal name (string key) provided in the URI doesn't exist in database, then return
 	alsrc := ActivityLog{}
-	alsrc.Name = params["id"]
+	alsrc.Name = id
 	if err := alsrc.Get(c); err == ErrorNoMatch {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return

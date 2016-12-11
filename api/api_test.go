@@ -4,6 +4,8 @@ import (
 	//"github.com/muly/aeunittest"
 	"net/http"
 	//"net/http/httptest"
+	"encoding/json"
+	"reflect"
 	"testing"
 
 	"github.com/muly/aeunittest"
@@ -62,15 +64,15 @@ func testActivity(t *testing.T, c context.Context, h http.Handler) {
 		tc.Handler = h
 		tc.T = t
 
-		tc.Run()
-	}
+		tc.RunCheckStatusCode()
 
-	//t.Log("Activity test cases execution completed")
+	}
 }
 
 func testGoal(t *testing.T, c context.Context, h http.Handler) {
-	tcs := aeunittest.TestCases{}
 
+	// Load the test case data
+	tcs := aeunittest.TestCases{}
 	if err := tcs.Load(`testcases\lifelog test cases - Goal.csv`, ',', true); err != nil {
 		t.Fatal(err)
 	}
@@ -81,7 +83,37 @@ func testGoal(t *testing.T, c context.Context, h http.Handler) {
 		tc.Handler = h
 		tc.T = t
 
-		tc.Run()
+		// execute test case to check the status code and capture the response body
+		gotResponseBody := tc.RunCheckStatusCode()
+
+		if tc.SkipFlag {
+			continue
+		}
+
+		if tc.WantStatusCode/100 != 2 { // skip Response Body Test for non-success cases
+			continue
+		}
+
+		// modify the 'got' to remove the system fields
+		got := GoalSimple{}
+		if err := json.Unmarshal(gotResponseBody, &got); err != nil {
+			tc.Error(tc.Name, ": Got Response Body invalid format: \n", string(gotResponseBody), "\n", err.Error())
+			continue
+		}
+
+		// modify the 'want' to remove the system fields, if any
+		want := GoalSimple{}
+		if err := json.Unmarshal([]byte(tc.WantResponseBody), &want); err != nil {
+			tc.Error(tc.Name, ": Want Response Body invalid format: \n", tc.WantResponseBody, "\n", err.Error())
+			continue
+		}
+
+		// compare the 'got' with 'want', and report if not matching
+		if !reflect.DeepEqual(got, want) {
+			tc.Error(tc.Name, ": Response Body : wanted ", want, " but got ", got)
+			continue
+		}
+
 	}
 
 	//t.Log("Goal test cases execution completed")
@@ -100,7 +132,7 @@ func testActivityLog(t *testing.T, c context.Context, h http.Handler) {
 		tc.Handler = h
 		tc.T = t
 
-		tc.Run()
+		tc.RunCheckStatusCode()
 	}
 
 	//t.Log("ActivityLog test cases execution completed")
