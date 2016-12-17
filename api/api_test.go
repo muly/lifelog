@@ -189,10 +189,12 @@ func testActivityLog(t *testing.T, c context.Context, h http.Handler) {
 			continue
 		}
 
-		// compare the 'got' with 'want', and report if not matching
-		if !reflect.DeepEqual(got, want) {
+		// compare the 'got' with 'want', and report if not matching. DateTime fields check doesnot work using DeepEqual, so these extra conditions are required
+		if !reflect.DeepEqual(ActivityLogSimpleNoTime{got.Name, got.Notes}, ActivityLogSimpleNoTime{want.Name, want.Notes}) ||
+			!got.StartTime.Equal(want.StartTime) ||
+			!got.EndTime.Equal(want.EndTime) {
 			tc.Error(tc.Name, ": Response Body : wanted ", want, " but got ", got)
-			continue
+			break //continue
 		}
 	}
 
