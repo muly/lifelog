@@ -87,10 +87,17 @@ func HandleGoalPut(w http.ResponseWriter, r *http.Request) {
 	}
 
 	params := mux.Vars(r)
+	id := params["id"]
+
+	if goal.Name != "" && id != goal.Name {
+		http.Error(w, "key in the URI and key in Request body are not matching", http.StatusBadRequest)
+		return
+	}
+	goal.Name = id
 
 	// if the goal name (string key) provided in the URI doesn't exist in database, then return
 	goalSrc := Goal{}
-	goalSrc.Name = params["id"]
+	goalSrc.Name = id
 	if err := goalSrc.Get(c); err == ErrorNoMatch {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return

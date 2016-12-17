@@ -2,32 +2,33 @@ Name,Uri,HttpVerb,RequestBody,WantStatusCode,WantResponseBody,Skip,ref #,Notes
 Activity Post Field validation-String field,/activity,POST,"{""Name"":123,""GoalID"":""Test123""}",400 bad request,?,,1.a.1,
 Activity Post Field validation-String field,/activity,POST,"{""Name"":""123"",""GoalID"":123}",400 bad request,?,,1.a.2,
 Activity Post Field validation-Passing blank in mandatory fields,/activity,POST,"{""Name"":"""".""GoalID"":""test4""}",400 bad request,?,,1.b,
-Activity Post new record test,/activity,POST,"{""Name"":""test1"",""GoalID"":""test""}",201 (created),"{""Name"":""test1"",""GoalID"":""test"",""CreatedOn"":"""",""ModifiedOn"":""""}",,2.1,"the value for the date fields is ignored in ""want - Response body"" as they are not deterministic."
-Activity Post Get record,/activity/test1,GET,,200 ok,,,2.2,
-Activity Post new record with duplicate key ,/activity,POST,"{""Name"":""test1"",""GoalID"":""test""}",400 bad request,"{""Name"":""test1"",""GoalID"":""test"",""CreatedOn"":"""",""ModifiedOn"":""""}",,3,"the value for the date fields is ignored in ""want - Response body"" as they are not deterministic."
+Activity Post new record test,/activity,POST,"{""Name"":""test1"",""GoalID"":""test""}",201 (created),"{""Name"":""test1"",""GoalID"":""test""}",,2.1,"the value for the date fields is ignored in ""want - Response body"" as they are not deterministic."
+Activity Post Get record,/activity/test1,GET,,200 ok,"{""Name"":""test1"",""GoalID"":""test""}",,2.2,
+Activity Post new record with duplicate key ,/activity,POST,"{""Name"":""test1"",""GoalID"":""test""}",400 bad request,,,3,"the value for the date fields is ignored in ""want - Response body"" as they are not deterministic."
 Activity Post with typo in field name in json/Sending Extra field,/activity,POST,"{""Name"":""test2"",""ID"":""test2""}",400 bad request,?,TRUE,4,"skipped as this is a known issue #27, #28"
 Activity Post Invalid Json,/activity,POST,"{""Name"":""test3""GoalID"":""testGoalID5""}",400 bad request,?,,5,
 Activity Post without body,/activity,POST,,400 bad request,?,,6,
 Activity Post with wrong key name,/activity,POST,"{""id"":""test4"",""GoalID"":""testGoalID6""}",400 bad request,,TRUE,7,skipped as this is a known issue #28
 ,,,,,,,,
-Activity Get with key,/activity/test1,GET,,200 ok,"check if all the fields are correct in the response as per the database, including the key",,1.a,
-Activity Get time field in response should be of RFC 3339 format ,/activity/test1,GET,,200 ok ,"example “2016-10-02T15:04:05-07:00""",,1.b,
+Activity Get with key,/activity/test1,GET,,200 ok,"{""Name"":""test1"",""GoalID"":""test""}",,1.a,
+Activity Get time field in response should be of RFC 3339 format ,/activity/test1,GET,,200 ok ,,TRUE,1.b,"Skipped as the current test code, we are not yet testing the system fields, and for Goal, there are no time fields other thank those in system fields"
 Activity Get with nonexisting Key,/activity/xyz,GET,,404 not found,,,2,
 Activity Get with blank key,/activity/,GET,,200 ok ,,TRUE,3,skipped as this is a known issue #33
 ,,,,,,,,
 Activity Put Field validation-String field,/activity/test1,PUT,"{""Name"":""test1"",""GoalID"":123}",400 bad request,?,,1.a,
 Activity Put Field validation-Passing blank in mandatory fields,/activity/test1,PUT,"{""Name"":"""",""GoalID"":""test4""}",400 bad request,?,TRUE,1.b,skipped as this is a known issue #28
-Activity Put Modifying a record,/activity/test1,PUT,"{""Name"":""test1"",""GoalID"":""TestGoalID New""}",200 ok,,,2.1,Need to be fixed in controller with correct statuscode
+Activity Put Modifying a record,/activity/test1,PUT,"{""Name"":""test1"",""GoalID"":""TestGoalID New""}",200 ok,"{""Name"":""test1"",""GoalID"":""TestGoalID New""}",,2.1,Need to be fixed in controller with correct statuscode
 Activity Put Successful saving of the record to database,/activity/test1,GET,,200 ok,"{""Name"":""test1"",""GoalID"":""TestGoalID New""}",,2.2,
 Activity Put new key should NOT be allowed,/activity/xyz,PUT,"{""Name"":""xyz"",""GoalID"":""TestGoalID New""}",400 bad request,,,3,
 Activity Put with typo in field name in json/Sending Extra field,/activity/test1,PUT,"{""Name"":""test1"",""Note"":""test2""}",400 bad request,?,TRUE,4,"skipped as this is a known issue #27, #28"
 Activity Put Invalid Json,/activity/test1,PUT,"{""Name"":""test1""GoalID"":""testGoalID3""}",400 bad request,?,,5,
 Activity Put key in URL not same as key in Body,/activity/test1,PUT,"{""Name"":""test10"",""GoalID"":""Test123""}",400 bad request,,,6,
+Activity Put key in URL but not in Body,/activity/test1,PUT,"{""GoalID"":""Test123""}",200 ok,"{""Name"":""test1"",""GoalID"":""Test123""}",,,
 "Activity Put without parameter in URI, with tailing /",/activity/,PUT,"{""Name"":""test1"",""GoalID"":""Test1New""}",404 not found,,,7.a,changed the want code to 404
 Activity Put without parameter in URI,/activity,PUT,"{""Name"":""test1"",""GoalID"":""Test1New""}",404 not found,,,7.b,
 ,,,,,,,,
 Activity Delete without key,/activity/,DELETE,,404 not found,,,1,changed the want code to 404
-Activity Delete remove record,/activity/test1,DELETE,,200 ok,,,2.1,
+Activity Delete remove record,/activity/test1,DELETE,,200 ok,{},,2.1,
 Activity Delete Get same record,/activity/test1,GET,,404 not found,,,2.2,already noted in above notes. so no further action required
 Activity Delete  non Existing record,/activity/xyz,DELETE,,404 not found,,,3,to be fixed in the controller
 Activity Delete non Existing record,/goal/xyz,DELETE,,404 not found,,,3,to be fixed in the controller

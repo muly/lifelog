@@ -77,6 +77,12 @@ func HandleActivityLogPut(w http.ResponseWriter, r *http.Request) {
 	params := mux.Vars(r)
 	id := params["id"]
 
+	if al.Name != "" && id != al.Name {
+		http.Error(w, "key in the URI and key in Request body are not matching", http.StatusBadRequest)
+		return
+	}
+	al.Name = id
+
 	// if the goal name (string key) provided in the URI doesn't exist in database, then return
 	alsrc := ActivityLog{}
 	alsrc.Name = id
@@ -226,5 +232,6 @@ func HandleActivityLogDelete(w http.ResponseWriter, r *http.Request) {
 	}
 
 	w.WriteHeader(http.StatusOK)
+	w.Write([]byte("{}"))
 
 }

@@ -21,7 +21,11 @@ type (
 		ActivityLogSimple
 		CommonSystemFields
 	}
-	ActivityLogs []ActivityLog
+	ActivityLogs            []ActivityLog
+	ActivityLogSimpleNoTime struct { // integration testing requires a seperate struct without date fields, because of limitation of the reflect.DeepEqual function on the date fields (https://github.com/golang/go/issues/12141)
+		Name  string
+		Notes string `json:"Notes,omitempty"`
+	}
 )
 
 // Get

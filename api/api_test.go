@@ -1,14 +1,14 @@
 package lifelog
 
 import (
-	//"github.com/muly/aeunittest"
+	//"github.com/muly/aeinttest"
 	"net/http"
 	//"net/http/httptest"
 	"encoding/json"
 	"reflect"
 	"testing"
 
-	"github.com/muly/aeunittest"
+	"github.com/muly/aeinttest"
 
 	"github.com/gorilla/mux"
 	"golang.org/x/net/context"
@@ -52,7 +52,7 @@ func TestActivityLog(t *testing.T) {
 //Note: had to write three separate Test* functions and call the individual test* functions, as wrapping all the 3 test* functions into single Test function is causing performance issues
 
 func testActivity(t *testing.T, c context.Context, h http.Handler) {
-	tcs := aeunittest.TestCases{}
+	tcs := aeinttest.TestCases{}
 
 	if err := tcs.Load(`testcases\lifelog test cases - Activity.csv`, ',', true); err != nil {
 		t.Fatal(err)
@@ -64,7 +64,38 @@ func testActivity(t *testing.T, c context.Context, h http.Handler) {
 		tc.Handler = h
 		tc.T = t
 
-		tc.RunCheckStatusCode()
+		// execute test case to check the status code and capture the response body
+		gotResponseBody := tc.RunCheckStatusCode()
+
+		//////Response Body Test
+
+		if tc.SkipFlag { //skip the Response Body test if skip flag is true
+			continue
+		}
+
+		if tc.WantStatusCode/100 != 2 { // skip Response Body Test for non-success cases
+			continue
+		}
+
+		// modify the 'got' to remove the system fields
+		got := ActivitySimple{}
+		if err := json.Unmarshal(gotResponseBody, &got); err != nil {
+			tc.Error(tc.Name, ": Got Response Body invalid format: \n", string(gotResponseBody), "\n", err.Error())
+			continue
+		}
+
+		// modify the 'want' to remove the system fields, if any
+		want := ActivitySimple{}
+		if err := json.Unmarshal([]byte(tc.WantResponseBody), &want); err != nil {
+			tc.Error(tc.Name, ": Want Response Body invalid format: \n", tc.WantResponseBody, "\n", err.Error())
+			continue
+		}
+
+		// compare the 'got' with 'want', and report if not matching
+		if !reflect.DeepEqual(got, want) {
+			tc.Error(tc.Name, ": Response Body : wanted ", want, " but got ", got)
+			continue
+		}
 
 	}
 }
@@ -72,7 +103,7 @@ func testActivity(t *testing.T, c context.Context, h http.Handler) {
 func testGoal(t *testing.T, c context.Context, h http.Handler) {
 
 	// Load the test case data
-	tcs := aeunittest.TestCases{}
+	tcs := aeinttest.TestCases{}
 	if err := tcs.Load(`testcases\lifelog test cases - Goal.csv`, ',', true); err != nil {
 		t.Fatal(err)
 	}
@@ -115,13 +146,11 @@ func testGoal(t *testing.T, c context.Context, h http.Handler) {
 			tc.Error(tc.Name, ": Response Body : wanted ", want, " but got ", got)
 			continue
 		}
-
 	}
-
 }
 
 func testActivityLog(t *testing.T, c context.Context, h http.Handler) {
-	tcs := aeunittest.TestCases{}
+	tcs := aeinttest.TestCases{}
 
 	if err := tcs.Load(`testcases\lifelog test cases - ActivityLog.csv`, ',', true); err != nil {
 		t.Fatal(err)
@@ -133,7 +162,40 @@ func testActivityLog(t *testing.T, c context.Context, h http.Handler) {
 		tc.Handler = h
 		tc.T = t
 
-		tc.RunCheckStatusCode()
+		// execute test case to check the status code and capture the response body
+		gotResponseBody := tc.RunCheckStatusCode()
+
+		//////Response Body Test
+
+		if tc.SkipFlag { //skip the Response Body test if skip flag is true
+			continue
+		}
+
+		if tc.WantStatusCode/100 != 2 { // skip Response Body Test for non-success cases
+			continue
+		}
+
+		// modify the 'got' to remove the system fields
+		got := ActivityLogSimple{}
+		if err := json.Unmarshal(gotResponseBody, &got); err != nil {
+			tc.Error(tc.Name, ": Got Response Body invalid format: \n", string(gotResponseBody), "\n", err.Error())
+			continue
+		}
+
+		// modify the 'want' to remove the system fields, if any
+		want := ActivityLogSimple{}
+		if err := json.Unmarshal([]byte(tc.WantResponseBody), &want); err != nil {
+			tc.Error(tc.Name, ": Want Response Body invalid format: \n", tc.WantResponseBody, "\n", err.Error())
+			continue
+		}
+
+		// compare the 'got' with 'want', and report if not matching. DateTime fields check doesnot work using DeepEqual, so these extra conditions are required
+		if !reflect.DeepEqual(ActivityLogSimpleNoTime{got.Name, got.Notes}, ActivityLogSimpleNoTime{want.Name, want.Notes}) ||
+			!got.StartTime.Equal(want.StartTime) ||
+			!got.EndTime.Equal(want.EndTime) {
+			tc.Error(tc.Name, ": Response Body : wanted ", want, " but got ", got)
+			break //continue
+		}
 	}
 
 	//t.Log("ActivityLog test cases execution completed")
